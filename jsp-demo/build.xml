@@ -7,7 +7,7 @@
     <property name="tmpdir" value="${java.io.tmpdir}"/>
 
     <target name="webapp" description="Build webapp">
-        <ant antfile="../tag/build.xml" dir="../tag" inheritAll="false"/>
+        <ant antfile="../tag-main/build.xml" dir="../tag-main" inheritAll="false"/>
         <delete dir="${classes.dir}" />
         <mkdir dir="${classes.dir}" />
         <javac srcdir="${src.dir}"
@@ -17,7 +17,7 @@
                 <fileset dir="${lib.dir}">
                     <include name="*.jar"/>
                 </fileset>
-                <fileset dir="../tag/bin">
+                <fileset dir="../tag-main/bin">
                     <include name="*.jar"/>
                 </fileset>
             </classpath>
@@ -28,7 +28,7 @@
         <antcall target="granule"/>
         <delete dir="build"/>
         <mkdir dir="build"/>
-        <war destfile="build/tag-webapp.war">
+        <war destfile="build/jsp-demo.war">
             <fileset dir="${webapp.dir}">
                 <include name="*/**"/>
                 <exclude name="build.xml"/>
@@ -38,8 +38,8 @@
                 <include name="granulecache/**"/>
             </fileset>
             <lib dir="${lib.dir}"/>
-            <lib dir="../tag/lib"/>
-            <lib dir="../tag/build" includes="*.jar"/>
+            <lib dir="../tag-main/lib"/>
+            <lib dir="../tag-main/build" includes="*.jar"/>
         </war>
         <delete dir="${classes.dir}" />
     </target>
@@ -47,10 +47,10 @@
     <target name="granule" description="Build offline cache for granule">
         <delete dir="${tmpdir}/granulecache"/>
         <path id="granule-classpath">
-            <fileset dir="../tag/lib">
+            <fileset dir="../tag-main/lib">
                 <include name="**/*.jar"/>
             </fileset>
-            <fileset dir="../tag/build">
+            <fileset dir="../tag-main/build">
                 <include name="**/*.jar"/>
             </fileset>
         </path>

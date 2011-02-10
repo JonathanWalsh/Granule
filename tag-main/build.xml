@@ -76,7 +76,7 @@
     <target name="test"
             depends="compile-tests"
             description="compile and execute JUnit tests">
-        <junit printsummary="on" fork="true" forkmode="once" showoutput="true" maxmemory="768m" failureproperty="testsfailed" dir="../tag-webapp/web">
+        <junit printsummary="on" fork="true" forkmode="once" showoutput="true" maxmemory="768m" failureproperty="testsfailed" dir="../jsp-demo/web">
             <classpath refid="classpath.path"/>
             <classpath>
                 <pathelement location="${build.dir}/test"/>
