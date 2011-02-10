@@ -1,0 +1,271 @@
+/*
+ * Copyright 2010 Granule Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package com.granule.cache;
+
+import com.granule.CachedBundle;
+import com.granule.CompressorSettings;
+import com.granule.FragmentDescriptor;
+import com.granule.IRequestProxy;
+import com.granule.JSCompileException;
+import com.granule.logging.Logger;
+import com.granule.logging.LoggerFactory;
+import com.granule.json.JSONException;
+import com.granule.json.JSONObject;
+
+import javax.servlet.ServletContext;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * User: Dario W?nsch
+ * Date: 12.09.2010
+ * Time: 4:05:16
+ */
+public class FileCache extends TagCacheImpl {
+    protected static TagCacheImpl instance = new FileCache();
+
+    private String cacheFolder;
+    private static final String DEFAULT_CACHE_FOLDER = "/granulecache";
+    private BufferedOutputStream catalog;
+
+    private FileCache() {
+        initTime = 0;
+    }
+
+    /*
+    * Singleton instance
+    */
+
+    public static TagCacheImpl getInstance() {
+        return instance;
+    }
+
+    public String compressAndStore(IRequestProxy request, CompressorSettings settings,
+                                   List<FragmentDescriptor> fragmentDescriptors, boolean isJs, String options) throws JSCompileException {
+
+        logger.debug("FileCache compressAndStore");
+
+        String signature = generateSignature(settings, fragmentDescriptors, options);
+
+        // Try to identify if it was already compiled
+        String id;
+        if (settings.getCache().equalsIgnoreCase("none"))
+            id = null;
+        else
+            synchronized (this) {
+                id = signatureToId.get(signature);
+            }
+
+        // If it wasn't then compress it
+        if (id == null) {
+            CachedBundle cs = new CachedBundle();
+            cs.setFragments(fragmentDescriptors);
+            cs.setOptions(options);
+            if (isJs)
+                cs.compileScript(settings, request);
+            else
+                cs.compileCss(settings, request);
+            synchronized (this) {
+                id = generateId(signature);
+                signatureToId.put(signature, id);
+                bundles.put(id, cs);
+
+                saveBundle(id, cs);
+            }
+        }
+        return id;
+    }
+
+    private void saveBundle(String id, CachedBundle cs) {
+        try {
+            String filename = "/" + id + ".gzip." + (cs.isScript() ? "js" : "css");
+
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(cacheFolder + filename));
+            try {
+                bos.write(cs.getBundleValue());
+            } finally {
+                bos.close();
+            }
+
+            String json = cs.getJSONString(id);
+            catalog.write(json.getBytes("UTF-8"));
+            catalog.flush();
+        } catch (Exception e) {
+            logger.error("Could not save bundle:", e);
+        }
+    }
+
+    public CachedBundle getCompiledBundle(IRequestProxy request, CompressorSettings settings, String id)
+            throws JSCompileException {
+        logger.debug("FileCache getCompiledBundle");
+        CachedBundle bundle = null;
+        synchronized (this) {
+            bundle = bundles.get(id);
+        }
+        if (bundle != null && settings.isCheckTimestamps()) {
+            synchronized (bundle) {
+                if (bundle.isChanged(request)) {
+                    if (bundle.getOptions() != null)
+                        settings.setOptions(bundle.getOptions());
+                    bundle.compile(settings, request);
+                    synchronized (this) {
+                        saveBundle(id, bundle);
+                    }
+                }
+            }
+        }
+        return bundle;
+    }
+
+    private boolean readCache(String catalog, ServletContext context) throws JSONException, IOException, JSCompileException {
+        BufferedReader reader = new BufferedReader(new FileReader(catalog));
+        String line;
+        boolean needRebuildCache = false;
+        while ((line = reader.readLine()) != null) {
+            try {
+                JSONObject obj = new JSONObject(line);
+                String id = obj.getString("id");
+                if (bundles.containsKey(id))
+                    needRebuildCache = true;
+                CachedBundle cs = new CachedBundle();
+                cs.loadFromJSON(obj, cacheFolder);
+                CompressorSettings settings = TagCacheFactory.getCompressorSettings(context.getRealPath("/"));
+                if (cs.getOptions() != null)
+                    settings.setOptions(cs.getOptions());
+                String signature = generateSignature(settings, cs.getFragments(), cs.getOptions());
+                String targetId = generateId(signature);
+                if (targetId.equalsIgnoreCase(id)) {
+                    signatureToId.put(signature, id);
+                    bundles.put(id, cs);
+                }
+            } catch (Exception e) {
+                needRebuildCache = true;
+                logger.error("Could not load bundle from catalog:", e);
+            }
+        }
+        return needRebuildCache;
+    }
+
+    private static String expandEnvironmentStrings(String str) {
+        StringBuilder sb = new StringBuilder();
+        int start = 0;
+        while (start < str.length()) {
+            int startIndex = str.indexOf('%', start);
+            if (startIndex < 0)
+                break;
+            else {
+                int endIndex = str.indexOf('%', startIndex + 1);
+                if (endIndex < 0) break;
+                else {
+                    sb.append(str.substring(start, startIndex));
+                    if (startIndex + 1 == endIndex) sb.append("%");
+                    else {
+                        String varValue = System.getenv(str.substring(startIndex + 1, endIndex));
+                        sb.append(varValue == null ? "" : varValue);
+                    }
+                    start = endIndex + 1;
+                }
+            }
+        }
+        if (start < str.length())
+            sb.append(str.substring(start, str.length()));
+        return sb.toString();
+    }
+
+    private void rebuildCache(String catalogFilename) throws IOException, JSONException {
+        BufferedOutputStream cat = new BufferedOutputStream(new FileOutputStream(catalogFilename));
+        try {
+            for (String id : bundles.keySet()) {
+                String json = bundles.get(id).getJSONString(id);
+                cat.write(json.getBytes("UTF-8"));
+            }
+        } finally {
+            cat.close();
+        }
+    }
+
+    private void deleteUnusedBundleFiles() {
+        File f = new File(cacheFolder);
+        String[] files = f.list(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                if ((new File(dir.getAbsolutePath() + "/" + name).isDirectory()))
+                    return false;
+                return (name.endsWith(".js") || name.endsWith(".css"));
+            }
+        });
+        for (String s : files) {
+            if (!bundles.containsKey(s.substring(0, s.indexOf(".")))) {
+                (new File(cacheFolder + "/" + s)).delete();
+            }
+        }
+    }
+
+    public void basicInit(String rootPath, CompressorSettings settings) {
+        if (settings.getCacheFileLocation() == null)
+            cacheFolder = DEFAULT_CACHE_FOLDER;
+        else cacheFolder = settings.getCacheFileLocation();
+        cacheFolder = expandEnvironmentStrings(cacheFolder);
+        if (!(new File(cacheFolder).isAbsolute()))
+            cacheFolder = rootPath + "/" + cacheFolder;
+        File[] files = (new File(cacheFolder)).listFiles();
+        if (files != null)
+            for (File f : files)
+                f.delete();
+        String catalogFilename = cacheFolder + "/catalog.json";
+        try {
+            File f = new File(cacheFolder);
+            if (!f.exists()) f.mkdirs();
+            catalog = new BufferedOutputStream(new FileOutputStream(catalogFilename, true));
+        } catch (Exception e) {
+            logger.error("Error while opening catalog for writing", e);
+        }
+    }
+
+    public void init(ServletContext context, CompressorSettings settings) {
+        logger.debug("FileCache init");
+        if (settings.getCacheFileLocation() == null)
+            cacheFolder = DEFAULT_CACHE_FOLDER;
+        else cacheFolder = settings.getCacheFileLocation();
+        cacheFolder = expandEnvironmentStrings(cacheFolder);
+        if (!(new File(cacheFolder).isAbsolute()))
+            cacheFolder = context.getRealPath(cacheFolder);
+        String catalogFilename = cacheFolder + "/catalog.json";
+        if ((new File(catalogFilename)).exists())
+            try {
+                boolean needRebuildCache = readCache(catalogFilename, context);
+                if (needRebuildCache)
+                    rebuildCache(catalogFilename);
+                deleteUnusedBundleFiles();
+            } catch (Exception e) {
+                logger.error("Error while reading cache catalog", e);
+            }
+        try {
+            File f = new File(cacheFolder);
+            if (!f.exists()) f.mkdirs();
+            catalog = new BufferedOutputStream(new FileOutputStream(catalogFilename, true));
+        } catch (Exception e) {
+            logger.error("Error while opening catalog for writing", e);
+        }
+    }
+
+    private static final Logger logger = LoggerFactory.getLogger(FileCache.class);
+}

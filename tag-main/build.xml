@@ -1,0 +1,94 @@
+<project name="granule" basedir="." default="dist">
+
+   
+
+    <!-- define other variables -->
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="test.dir" value="${basedir}/test"/>
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="testClasses.dir" value="${build.dir}/test"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="bin.dir" value="${basedir}/bin"/>
+    <property file="${src.dir}/com/granule/config.properties"/>
+    <property name="jarfile" value="${build.dir}/${ant.project.name}${version}.jar"/>
+    <property name="distfile" value="${build.dir}/${ant.project.name}${version}.zip"/>
+
+    <!-- set the classpath for the project              -->
+    <!-- this includes the generated source class files -->
+    <!-- and every jar in the /lib directory            -->
+    <path id="classpath.path">
+        <pathelement location="${classes.dir}"/>
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${bin.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="compile" description="compile the source code">
+        <delete dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}"
+               destdir="${classes.dir}"
+               excludes=".svn"
+               debug="true" debuglevel="lines,source" includeantruntime="false">
+            <classpath refid="classpath.path"/>
+        </javac>
+		<copy todir="${classes.dir}" >
+		    <fileset dir="${src.dir}" includes="**/*.properties" />
+		</copy>
+    </target>
+    <target name="jar" depends="compile">
+        <jar destfile="${jarfile}" update="true">
+            <fileset dir="${classes.dir}"/>
+            <fileset dir="${src.dir}" includes="META-INF/**" />
+			<zipfileset dir="${basedir}/.." prefix="META-INF" includes="LICENSE"/>
+			<zipfileset dir="${basedir}/.." prefix="META-INF" includes="NOTICE"/>
+            <manifest>
+                <attribute name="Main-Class"  value="com.granule.ant.BuildCache" />
+                <attribute name="Implementation-Version" value="${version}" />
+            </manifest>
+        </jar>
+    </target>
+    <target name="dist" depends="test,jar">
+        <zip destfile="${distfile}">
+            <fileset dir="${basedir}/files" includes="granule.properties"/>
+            <fileset dir="${basedir}/files" includes="granule.debug.properties"/>
+            <fileset dir="${basedir}/files" includes="web.xml"/>
+			<fileset dir="${basedir}/.." includes="LICENSE"/>
+    		<fileset dir="${basedir}/.." includes="NOTICE"/>
+            <zipfileset dir="${build.dir}" prefix="lib" includes="${ant.project.name}${version}.jar"/>
+        </zip>
+    </target>
+
+    <target name="compile-tests"
+            depends="compile"
+            description="compile the JUnit tests">
+        <mkdir dir="${testClasses.dir}"/>
+        <javac srcdir="${test.dir}"
+               destdir="${testClasses.dir}"
+               excludes=".svn" includeantruntime="false">
+            <classpath refid="classpath.path"/>
+        </javac>
+    </target>
+    <target name="test"
+            depends="compile-tests"
+            description="compile and execute JUnit tests">
+        <junit printsummary="on" fork="true" forkmode="once" showoutput="true" maxmemory="768m" failureproperty="testsfailed" dir="../tag-webapp/web">
+            <classpath refid="classpath.path"/>
+            <classpath>
+                <pathelement location="${build.dir}/test"/>
+            </classpath>
+            <formatter type="plain" usefile="false"/>
+            <batchtest>
+                <fileset dir="${build.dir}/test">
+                    <include name="**/*Test.class"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <fail message="Tests failed." if="testsfailed"/>
+    </target>
+
+</project>
