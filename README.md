@@ -4,10 +4,6 @@ Granule is an optimization solution for Java-based web applications (JSP, JSF, G
 
 Granule can automatically choose minimization algorithms by content from simple whitespace removal algorithms to advanced methods as Google Closure Compiler. It helps integrate Google Closure Library by automatically calculating dependencies between JS files and providing caching or pre-compiling capabilities. The library includes JSP tag and ant task so all packages can be precompiled.
 
-
-[https://sites.google.com/site/granuletag/_/rsrc/1297244554577/home/demojsphtml.png]
-
-
 The library organizes work with large sets of web files. It has two modes: development and production, configuration of those can be tuned separately up to turning off any effect of the library at all. 
 
 The library is released under business friendly Apache 2.0 Open Source License. 
