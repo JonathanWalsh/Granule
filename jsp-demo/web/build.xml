@@ -1,0 +1,18 @@
+<project name="giraffe" default="granula">
+  <target name="granula" description="Build offline cache for granula">
+    <path id="granula-classpath">
+                <fileset dir="WEB-INF/lib">
+                        <include name="**/*.jar" />
+                </fileset>
+				<pathelement path="WEB-INF/classes/"/>
+    </path>
+	<taskdef name="build-cache" classname="com.granule.ant.BuildCacheTask" classpathref="granula-classpath"/>
+    <build-cache rootpath=".">
+	   <pages>
+    		<fileset dir=".">
+               <include name="**/*.jsp" /> 
+            </fileset>
+       </pages>
+	</build-cache>
+  </target> 
+</project>

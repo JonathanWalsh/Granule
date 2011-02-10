@@ -1,0 +1,67 @@
+<project name="giraffe" default="webapp">
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="webapp.dir" value="${basedir}/web"/>
+    <property name="classes.dir" value="${webapp.dir}/WEB-INF/classes"/>
+    <property name="webapp.lib.dir" value="${webapp.dir}/WEB-INF/lib"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="tmpdir" value="${java.io.tmpdir}"/>
+
+    <target name="webapp" description="Build webapp">
+        <ant antfile="../tag/build.xml" dir="../tag" inheritAll="false"/>
+        <delete dir="${classes.dir}" />
+        <mkdir dir="${classes.dir}" />
+        <javac srcdir="${src.dir}"
+               destdir="${classes.dir}"
+               excludes=".svn">
+            <classpath>
+                <fileset dir="${lib.dir}">
+                    <include name="*.jar"/>
+                </fileset>
+                <fileset dir="../tag/bin">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+		<copy todir="${classes.dir}" >
+		    <fileset dir="${src.dir}" includes="**/*.properties" />
+		</copy>
+        <antcall target="granule"/>
+        <delete dir="build"/>
+        <mkdir dir="build"/>
+        <war destfile="build/tag-webapp.war">
+            <fileset dir="${webapp.dir}">
+                <include name="*/**"/>
+                <exclude name="build.xml"/>
+				<exclude name="WEB-INF/granule.debug.properties"/>
+            </fileset>
+            <fileset dir="${tmpdir}">
+                <include name="granulecache/**"/>
+            </fileset>
+            <lib dir="${lib.dir}"/>
+            <lib dir="../tag/lib"/>
+            <lib dir="../tag/build" includes="*.jar"/>
+        </war>
+        <delete dir="${classes.dir}" />
+    </target>
+
+    <target name="granule" description="Build offline cache for granule">
+        <delete dir="${tmpdir}/granulecache"/>
+        <path id="granule-classpath">
+            <fileset dir="../tag/lib">
+                <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="../tag/build">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+        <taskdef name="build-cache" classname="com.granule.ant.BuildCacheTask" classpathref="granule-classpath"/>
+        <build-cache rootpath="${webapp.dir}" outputpath="${tmpdir}/granulecache">
+            <pages>
+                <fileset dir="${webapp.dir}">
+                    <include name="**/*.jsp"/>
+                </fileset>
+            </pages>
+        </build-cache>
+    </target>
+
+</project>
