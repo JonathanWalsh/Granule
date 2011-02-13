@@ -50,6 +50,8 @@ public class CachedBundle {
     private static final String JAVASCRIPT_MIME = "application/x-javascript";
     private static final String CSS_MIME = "text/css";
 
+    private static final long ZIP_ERROR_COMPENSATION = 1350;
+
     public byte[] getBundleValue() {
         return bundleValue;
     }
@@ -165,7 +167,7 @@ public class CachedBundle {
 
     public boolean isChanged(IRequestProxy request) {
         long d = calcModifyDate(fragments, dependentFragments, request);
-        return d > modifyDate;
+        return d > modifyDate+ZIP_ERROR_COMPENSATION;
     }
 
     public String getMimeType() {
@@ -187,7 +189,6 @@ public class CachedBundle {
     public String getJSONString(String id) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("id", id);
-        obj.put("modifydate", modifyDate);
         obj.put("mime-type", mimeType);
         if (options != null)
             obj.put("options", options);
@@ -215,7 +216,6 @@ public class CachedBundle {
     }
 
     public void loadFromJSON(JSONObject obj, String cacheFolder) throws JSONException, IOException {
-        modifyDate = obj.getLong("modifydate");
         mimeType = obj.getString("mime-type");
         if (obj.has("options"))
             options = obj.getString("options");
@@ -246,6 +246,7 @@ public class CachedBundle {
 
         String filename = cacheFolder + "/" + obj.getString("id") + ".gzip." + (isScript() ? "js" : "css");
         File file = new File(filename);
+        modifyDate = file.lastModified();
         InputStream is = new FileInputStream(file);
         try {
             long length = file.length();
@@ -267,6 +268,10 @@ public class CachedBundle {
 
     public boolean isScript() {
         return mimeType != null && mimeType.equalsIgnoreCase(JAVASCRIPT_MIME);
+    }
+
+    public long getModifyDate() {
+        return modifyDate;
     }
 
     private static final Logger logger = LoggerFactory.getLogger(CachedBundle.class);

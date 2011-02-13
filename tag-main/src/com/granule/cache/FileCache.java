@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * User: Dario W?nsch
+ * User: Dario Wünsch
  * Date: 12.09.2010
  * Time: 4:05:16
  */
@@ -105,6 +105,8 @@ public class FileCache extends TagCacheImpl {
             } finally {
                 bos.close();
             }
+            File f = new File(cacheFolder + filename);
+            f.setLastModified(cs.getModifyDate());
 
             String json = cs.getJSONString(id);
             catalog.write(json.getBytes("UTF-8"));
