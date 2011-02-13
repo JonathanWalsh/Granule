@@ -22,6 +22,7 @@ import com.granule.IRequestProxy;
 import com.granule.JSCompileException;
 import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
+import com.granule.utils.PathUtils;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 
@@ -44,7 +45,14 @@ public class FileCache extends TagCacheImpl {
     protected static TagCacheImpl instance = new FileCache();
 
     private String cacheFolder;
-    private static final String DEFAULT_CACHE_FOLDER = "/granulecache";
+    
+    /*
+     * Default pathname (it is abstract name reference to context path of web app)
+     * Started from . to mark path as not absolute in the Unix File Systems
+     * 
+     */
+    private static final String DEFAULT_CACHE_FOLDER = "./granulecache";
+    
     private BufferedOutputStream catalog;
 
     private FileCache() {
@@ -228,6 +236,7 @@ public class FileCache extends TagCacheImpl {
         cacheFolder = expandEnvironmentStrings(cacheFolder);
         if (!(new File(cacheFolder).isAbsolute()))
             cacheFolder = rootPath + "/" + cacheFolder;
+        cacheFolder=PathUtils.clean(cacheFolder);
         File[] files = (new File(cacheFolder)).listFiles();
         if (files != null)
             for (File f : files)
@@ -250,6 +259,7 @@ public class FileCache extends TagCacheImpl {
         cacheFolder = expandEnvironmentStrings(cacheFolder);
         if (!(new File(cacheFolder).isAbsolute()))
             cacheFolder = context.getRealPath(cacheFolder);
+        cacheFolder=PathUtils.clean(cacheFolder);
         String catalogFilename = cacheFolder + "/catalog.json";
         if ((new File(catalogFilename)).exists())
             try {

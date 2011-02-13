@@ -27,6 +27,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 /**
  * User: Dario Wünsch Date: 20.06.2010 Time: 6:38:03
  */
+@SuppressWarnings("serial")
 public class CompressTag extends BodyTagSupport {
 
     public static String COMPREST_TAG_CONTENT = CompressTag.class.getName() + "Content";
