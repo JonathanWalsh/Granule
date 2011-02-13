@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -237,6 +238,7 @@ public class FileCache extends TagCacheImpl {
         if (!(new File(cacheFolder).isAbsolute()))
             cacheFolder = rootPath + "/" + cacheFolder;
         cacheFolder=PathUtils.clean(cacheFolder);
+        logger.info(MessageFormat.format("Granule FileCache location is {0}", cacheFolder));
         File[] files = (new File(cacheFolder)).listFiles();
         if (files != null)
             for (File f : files)
@@ -260,6 +262,7 @@ public class FileCache extends TagCacheImpl {
         if (!(new File(cacheFolder).isAbsolute()))
             cacheFolder = context.getRealPath(cacheFolder);
         cacheFolder=PathUtils.clean(cacheFolder);
+        logger.info(MessageFormat.format("Granule FileCache location is {0}", cacheFolder));
         String catalogFilename = cacheFolder + "/catalog.json";
         if ((new File(catalogFilename)).exists())
             try {
