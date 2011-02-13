@@ -43,7 +43,7 @@ public class TagCacheFactory {
 
     public static void init(ServletContext context) throws IOException {
         CompressorSettings settings = initInstance(context.getRealPath("/"));
-        instance.init(context, settings);
+        instance.initWeb(context, settings);
     }
 
     private static CompressorSettings initInstance(String rootPath) throws IOException {
@@ -56,7 +56,7 @@ public class TagCacheFactory {
 
     public static void init(String rootPath) throws IOException {
         initInstance(rootPath);
-        instance.basicInit(rootPath, getCompressorSettings(rootPath));
+        instance.initForStandalone(rootPath, getCompressorSettings(rootPath));
     }
 
     protected static final Utf8Properties settings = new Utf8Properties();

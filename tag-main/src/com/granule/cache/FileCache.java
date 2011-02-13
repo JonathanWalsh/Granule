@@ -229,7 +229,7 @@ public class FileCache extends TagCacheImpl {
         }
     }
 
-    public void basicInit(String rootPath, CompressorSettings settings) {
+    public void initForStandalone(String rootPath, CompressorSettings settings) {
         if (settings.getCacheFileLocation() == null)
             cacheFolder = DEFAULT_CACHE_FOLDER;
         else cacheFolder = settings.getCacheFileLocation();
@@ -251,7 +251,7 @@ public class FileCache extends TagCacheImpl {
         }
     }
 
-    public void init(ServletContext context, CompressorSettings settings) {
+    public void initWeb(ServletContext context, CompressorSettings settings) {
         logger.debug("FileCache init");
         if (settings.getCacheFileLocation() == null)
             cacheFolder = DEFAULT_CACHE_FOLDER;

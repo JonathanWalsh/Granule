@@ -35,7 +35,7 @@ public interface TagCache {
 
     public CachedBundle getCompiledBundle(IRequestProxy request, CompressorSettings settings, String id) throws JSCompileException;
 
-    public void basicInit(String rootPath, CompressorSettings settings);
+    public void initForStandalone(String rootPath, CompressorSettings settings);
 
-    public void init(ServletContext context, CompressorSettings settings);
+    public void initWeb(ServletContext context, CompressorSettings settings);
 }

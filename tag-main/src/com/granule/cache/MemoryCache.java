@@ -102,11 +102,11 @@ public class MemoryCache extends TagCacheImpl {
         return bundle;
     }
 
-    public void basicInit(String rootPath, CompressorSettings settings) {
+    public void initForStandalone(String rootPath, CompressorSettings settings) {
         // no actions
     }
 
-    public void init(ServletContext context, CompressorSettings settings) {
+    public void initWeb(ServletContext context, CompressorSettings settings) {
         // no actions
     }
 
