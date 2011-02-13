@@ -72,7 +72,7 @@ public class FileCache extends TagCacheImpl {
 
         logger.debug("FileCache compressAndStore");
 
-        String signature = generateSignature(settings, fragmentDescriptors, options);
+        String signature = generateSignature(settings, fragmentDescriptors, options, isJs);
 
         // Try to identify if it was already compiled
         String id;
@@ -161,7 +161,7 @@ public class FileCache extends TagCacheImpl {
                 CompressorSettings settings = TagCacheFactory.getCompressorSettings(context.getRealPath("/"));
                 if (cs.getOptions() != null)
                     settings.setOptions(cs.getOptions());
-                String signature = generateSignature(settings, cs.getFragments(), cs.getOptions());
+                String signature = generateSignature(settings, cs.getFragments(), cs.getOptions(), cs.isScript());
                 String targetId = generateId(signature);
                 if (targetId.equalsIgnoreCase(id)) {
                     signatureToId.put(signature, id);

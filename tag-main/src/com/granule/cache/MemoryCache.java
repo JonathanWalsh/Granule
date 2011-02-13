@@ -49,7 +49,7 @@ public class MemoryCache extends TagCacheImpl {
     public String compressAndStore(IRequestProxy request, CompressorSettings settings,
                                    List<FragmentDescriptor> fragmentDescriptors, boolean isJs, String options) throws JSCompileException {
 
-        String signature = generateSignature(settings, fragmentDescriptors, options);
+        String signature = generateSignature(settings, fragmentDescriptors, options, isJs);
 
         // Try to identify if it was already compiled
         String id;

@@ -51,14 +51,17 @@ public abstract class TagCacheImpl implements TagCache {
 		return id;
 	}
 	
-	protected String generateSignature(CompressorSettings settings, List<FragmentDescriptor> fragmentDescriptors, String options) {
-		StringBuilder all = new StringBuilder();
-		for (FragmentDescriptor sd : fragmentDescriptors)
-			all.append(sd.toString()).append("\n");
-		all.append(settings.getJsCompressMethod());
-		if (options!=null)
-			all.append(options);
-		String signature = all.toString();
-		return signature;
-	}
+	protected String generateSignature(CompressorSettings settings, List<FragmentDescriptor> fragmentDescriptors,
+                                       String options, boolean isJs) {
+        StringBuilder all = new StringBuilder();
+        for (FragmentDescriptor sd : fragmentDescriptors)
+            all.append(sd.toString()).append("\n");
+        if (isJs) {
+            all.append(settings.getJsCompressMethod());
+            if (options != null)
+                all.append(options);
+        } else all.append(settings.getCssCompressMethod());
+        String signature = all.toString();
+        return signature;
+    }
 }
