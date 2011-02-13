@@ -13,15 +13,14 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
+ 
+  
+    <!-- Granule Tag required servlet declarations --> 
     <servlet>
         <servlet-name>CompressServlet</servlet-name>
         <servlet-class>com.granule.CompressServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>action</servlet-name>
-        <url-pattern>*.do</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CompressServlet</servlet-name>
         <url-pattern>/combined.js</url-pattern>
@@ -29,6 +28,12 @@
     <servlet-mapping>
         <servlet-name>CompressServlet</servlet-name>
         <url-pattern>/combined.css</url-pattern>
+    </servlet-mapping>
+ 
+   
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
