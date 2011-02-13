@@ -21,7 +21,10 @@ package com.granule;
  * Time: 1:32:46
  */
 public class JSCompileException extends Exception {
-    public JSCompileException(Throwable cause) {
+
+	private static final long serialVersionUID = -2323320364173426969L;
+
+	public JSCompileException(Throwable cause) {
         super(cause);
     }
 

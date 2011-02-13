@@ -35,7 +35,10 @@ import com.granule.logging.LoggerFactory;
  * Time: 2:04:08
  */
 public class CompressServlet extends HttpServlet {
-    private static final String ID_PARAMETER = "id";
+
+	private static final long serialVersionUID = -2526640346318371192L;
+
+	private static final String ID_PARAMETER = "id";
 
     private static final String VERSION_KEY = "version";
 
@@ -51,6 +54,7 @@ public class CompressServlet extends HttpServlet {
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String id = request.getParameter(ID_PARAMETER);
+        java.util.logging.Logger.getLogger("com.google.javascript.jscomp.PhaseOptimizer").setLevel(Level.WARNING);
         (new CompressorHandler()).handle(request, response, id);
     }
 
@@ -61,7 +65,7 @@ public class CompressServlet extends HttpServlet {
         } catch (IOException e) {
             throw new ServletException(e);
         }
-        java.util.logging.Logger.getLogger("com.google.javascript.jscomp").setLevel(Level.WARNING);
+        
         loadVersion();
         logger.info(MessageFormat.format("Granule {0} Started", version));
     }
