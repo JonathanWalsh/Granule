@@ -13,6 +13,7 @@
     <property file="${src.dir}/com/granule/config.properties"/>
     <property name="jarfile" value="${build.dir}/${ant.project.name}${version}.jar"/>
     <property name="distfile" value="${build.dir}/${ant.project.name}${version}.zip"/>
+    <property name="target-jdk" value="1.5"/>
 
     <!-- set the classpath for the project              -->
     <!-- this includes the generated source class files -->
@@ -33,7 +34,7 @@
         <javac srcdir="${src.dir}"
                destdir="${classes.dir}"
                excludes=".svn"
-               debug="true" debuglevel="lines,source" includeantruntime="false">
+               debug="true" debuglevel="lines,source" includeantruntime="false" target="${target-jdk}">
             <classpath refid="classpath.path"/>
         </javac>
 		<copy todir="${classes.dir}" >
