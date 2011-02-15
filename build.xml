@@ -1,0 +1,6 @@
+<project name="build-all" default="build-all">
+  <target name="build-all" description="Build all projects">
+	 <ant antfile="tag-main/build.xml" inheritAll="false"/>
+	 <ant antfile="jsp-demo/build.xml" inheritAll="false"/>
+  </target>
+</project>
