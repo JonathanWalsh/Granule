@@ -20,6 +20,7 @@ import com.granule.CompressorSettings;
 import com.granule.FragmentDescriptor;
 import com.granule.IRequestProxy;
 import com.granule.JSCompileException;
+import com.granule.SimpleRequestProxy;
 import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
 import com.granule.utils.PathUtils;
@@ -231,56 +232,70 @@ public class FileCache extends TagCacheImpl {
     }
 
     public void initForStandalone(String rootPath, CompressorSettings settings) {
-        if (settings.getCacheFileLocation() == null)
-            cacheFolder = DEFAULT_CACHE_FOLDER;
-        else cacheFolder = settings.getCacheFileLocation();
-        cacheFolder = expandEnvironmentStrings(cacheFolder);
-        if (!(new File(cacheFolder).isAbsolute()))
-            cacheFolder = rootPath + "/" + cacheFolder;
-        cacheFolder=PathUtils.clean(cacheFolder);
-        logger.info(MessageFormat.format("Granule FileCache location is {0}", cacheFolder));
+    	cacheFolder=calculateCacheLocation(settings, rootPath);
+    
+    	emptyCacheFolder();
+        
+        String catalogFilename = getCacheCatalogFilePath();
+        openCatalogFile(catalogFilename);
+    }
+
+	private void emptyCacheFolder() {
+		//Delete all files in cacheFolder
         File[] files = (new File(cacheFolder)).listFiles();
         if (files != null)
             for (File f : files)
                 f.delete();
-        String catalogFilename = cacheFolder + "/catalog.json";
-        try {
+	}
+
+    public void initWeb(ServletContext context, CompressorSettings settings) {
+        logger.debug("FileCache init");
+        String rootPath=context.getRealPath("/");
+        
+        cacheFolder=calculateCacheLocation(settings, rootPath);
+        
+        String catalogFilename = getCacheCatalogFilePath();
+        if ((new File(catalogFilename)).exists())
+            try {
+                boolean needRebuildCache = readCache(catalogFilename, context);
+                if (needRebuildCache) {
+                	emptyCacheFolder();
+                    rebuildCache(catalogFilename);
+                }
+                else deleteUnusedBundleFiles();
+            } catch (Exception e) {
+                logger.error("Error while reading cache catalog", e);
+            }
+        
+        openCatalogFile(catalogFilename);
+    }
+
+	private void openCatalogFile(String catalogFilename) {
+		try {
             File f = new File(cacheFolder);
             if (!f.exists()) f.mkdirs();
             catalog = new BufferedOutputStream(new FileOutputStream(catalogFilename, true));
         } catch (Exception e) {
             logger.error("Error while opening catalog for writing", e);
         }
-    }
+	}
 
-    public void initWeb(ServletContext context, CompressorSettings settings) {
-        logger.debug("FileCache init");
-        if (settings.getCacheFileLocation() == null)
+	private String calculateCacheLocation(CompressorSettings settings, String rootPath) {
+		String cacheFolder;
+		if (settings.getCacheFileLocation() == null)
             cacheFolder = DEFAULT_CACHE_FOLDER;
         else cacheFolder = settings.getCacheFileLocation();
         cacheFolder = expandEnvironmentStrings(cacheFolder);
         if (!(new File(cacheFolder).isAbsolute()))
-            cacheFolder = context.getRealPath(cacheFolder);
+        	  cacheFolder = rootPath + "/" + cacheFolder;
         cacheFolder=PathUtils.clean(cacheFolder);
         logger.info(MessageFormat.format("Granule FileCache location is {0}", cacheFolder));
-        String catalogFilename = cacheFolder + "/catalog.json";
-        if ((new File(catalogFilename)).exists())
-            try {
-                boolean needRebuildCache = readCache(catalogFilename, context);
-                if (needRebuildCache)
-                    rebuildCache(catalogFilename);
-                deleteUnusedBundleFiles();
-            } catch (Exception e) {
-                logger.error("Error while reading cache catalog", e);
-            }
-        try {
-            File f = new File(cacheFolder);
-            if (!f.exists()) f.mkdirs();
-            catalog = new BufferedOutputStream(new FileOutputStream(catalogFilename, true));
-        } catch (Exception e) {
-            logger.error("Error while opening catalog for writing", e);
-        }
-    }
+        return cacheFolder;
+	}
+
+	private String getCacheCatalogFilePath() {
+		return cacheFolder + "/catalog.json";
+	}
 
     private static final Logger logger = LoggerFactory.getLogger(FileCache.class);
 }
