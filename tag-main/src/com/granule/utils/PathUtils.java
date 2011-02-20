@@ -15,6 +15,7 @@
  */
 package com.granule.utils;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
@@ -156,5 +157,16 @@ public class PathUtils {
         }
         return clean(path);
     }
+    
+	public static InputStream getResourceAsStream(String fileName) {
+		InputStream is = ClassLoader.getSystemClassLoader()
+				.getResourceAsStream(fileName);
+		if (is == null) {
+			is = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream(fileName);
+		}
+		return is;
+	}
+
 }
 

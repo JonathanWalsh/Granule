@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.granule.cache.TagCacheFactory;
 import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
+import com.granule.utils.PathUtils;
 
 /**
  * User: Dario Wünsch
@@ -73,7 +74,7 @@ public class CompressServlet extends HttpServlet {
     private void loadVersion() {
         Properties props = new Properties();
         try {
-            props.load(getClass().getResourceAsStream("/com/granule/config.properties"));
+            props.load(PathUtils.getResourceAsStream("/com/granule/config.properties"));
             if (props.containsKey(VERSION_KEY))
                 version = props.getProperty(VERSION_KEY);
         } catch (IOException e) {
