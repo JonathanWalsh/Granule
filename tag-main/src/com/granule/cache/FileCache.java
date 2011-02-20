@@ -15,19 +15,6 @@
  */
 package com.granule.cache;
 
-import com.granule.CachedBundle;
-import com.granule.CompressorSettings;
-import com.granule.FragmentDescriptor;
-import com.granule.IRequestProxy;
-import com.granule.JSCompileException;
-import com.granule.SimpleRequestProxy;
-import com.granule.logging.Logger;
-import com.granule.logging.LoggerFactory;
-import com.granule.utils.PathUtils;
-import com.granule.json.JSONException;
-import com.granule.json.JSONObject;
-
-import javax.servlet.ServletContext;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,6 +24,19 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
+
+import javax.servlet.ServletContext;
+
+import com.granule.CachedBundle;
+import com.granule.CompressorSettings;
+import com.granule.FragmentDescriptor;
+import com.granule.IRequestProxy;
+import com.granule.JSCompileException;
+import com.granule.json.JSONException;
+import com.granule.json.JSONObject;
+import com.granule.logging.Logger;
+import com.granule.logging.LoggerFactory;
+import com.granule.utils.PathUtils;
 
 /**
  * User: Dario Wünsch
