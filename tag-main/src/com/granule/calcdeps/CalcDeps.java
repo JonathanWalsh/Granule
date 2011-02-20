@@ -35,7 +35,7 @@ import com.granule.JSCompileException;
 import com.granule.utils.PathUtils;
 
 /**
- * User: Dario Wünsch Date: 24.06.2010 Time: 3:18:19
+ * User: Dario Wunsch Date: 24.06.2010 Time: 3:18:19
  */
 public class CalcDeps {
 

@@ -23,7 +23,7 @@ import com.granule.CompressorSettings;
 import com.granule.FragmentDescriptor;
 
 /**
- * User: Dario Wünsch Date: 23.07.2010 Time: 3:31:12
+ * User: Dario Wunsch Date: 23.07.2010 Time: 3:31:12
  */
 public abstract class TagCacheImpl implements TagCache {
 

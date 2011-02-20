@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import java.util.List;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 11.12.10
  * Time: 3:02
  */

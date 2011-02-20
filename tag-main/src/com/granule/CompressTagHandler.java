@@ -39,7 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * User: Dario Wünsch Date: 05.07.2010 Time: 3:43:47
+ * User: Dario Wunsch Date: 05.07.2010 Time: 3:43:47
  */
 public class CompressTagHandler {
 

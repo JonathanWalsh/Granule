@@ -27,7 +27,7 @@ import org.kohsuke.args4j.CmdLineParser;
 import com.granule.utils.PathUtils;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 25.09.2010
  * Time: 0:57:20
  */

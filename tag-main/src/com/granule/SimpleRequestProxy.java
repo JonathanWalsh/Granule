@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.HashMap;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 20.07.2010
  * Time: 2:59:14
  */

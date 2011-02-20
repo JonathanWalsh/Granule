@@ -21,7 +21,7 @@ import java.util.List;
 import org.kohsuke.args4j.Option;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 25.09.2010
  * Time: 1:00:19
  */

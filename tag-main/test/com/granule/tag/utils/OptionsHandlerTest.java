@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 import com.granule.utils.OptionsHandler;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 13.08.2010
  * Time: 19:33:29
  */

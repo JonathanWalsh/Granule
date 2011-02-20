@@ -25,7 +25,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 24.09.2010
  * Time: 2:10:28
  */

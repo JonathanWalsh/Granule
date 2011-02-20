@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * User: Dario Wünsch Date: 22.06.2010 Time: 22:20:28
+ * User: Dario Wunsch Date: 22.06.2010 Time: 22:20:28
  */
 public abstract class FragmentDescriptor implements Cloneable {
 

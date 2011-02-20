@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: Dario Wünsch Date: 20.07.2010 Time: 2:51:42
+ * User: Dario Wunsch Date: 20.07.2010 Time: 2:51:42
  */
 public class ClosureCalcDepsTest extends TestCase {
     public void testBasic() {

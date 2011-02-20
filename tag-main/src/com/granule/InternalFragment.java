@@ -21,7 +21,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 10.01.11
  * Time: 2:11
  */

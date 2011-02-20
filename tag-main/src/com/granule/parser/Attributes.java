@@ -18,7 +18,7 @@ package com.granule.parser;
 import java.util.HashMap;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 09.12.2010
  * Time: 7:00:43
  */

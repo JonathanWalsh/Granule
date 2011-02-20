@@ -16,7 +16,7 @@
 package com.granule.miniparser;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 22.12.10
  * Time: 3:56
  */

@@ -31,7 +31,7 @@ import com.granule.logging.LoggerFactory;
 import com.granule.utils.PathUtils;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 21.06.2010
  * Time: 2:04:08
  */

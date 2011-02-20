@@ -27,7 +27,7 @@ import java.util.List;
 import com.granule.utils.Utf8Properties;
 
 /**
- * User: Dario Wünsch Date: 22.06.2010 Time: 22:09:21
+ * User: Dario Wunsch Date: 22.06.2010 Time: 22:09:21
  */
 public class CompressorSettings {
     private String jsCompressMethod = JSFASTMIN_VALUE;

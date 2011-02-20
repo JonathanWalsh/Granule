@@ -16,7 +16,7 @@
 package com.granule;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 23.06.2010
  * Time: 1:32:46
  */

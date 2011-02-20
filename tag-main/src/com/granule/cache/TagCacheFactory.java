@@ -27,7 +27,7 @@ import com.granule.JSCompileException;
 import com.granule.utils.Utf8Properties;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 23.07.2010
  * Time: 3:34:11
  */

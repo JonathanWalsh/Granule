@@ -26,7 +26,7 @@ import com.granule.IRequestProxy;
 import com.granule.JSCompileException;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 23.07.2010
  * Time: 3:30:43
  */

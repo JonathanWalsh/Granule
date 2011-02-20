@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 10.01.11
  * Time: 2:10
  */

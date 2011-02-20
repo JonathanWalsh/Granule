@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * User: Dario Wünsch Date: 22.07.2010 Time: 0:18:19
+ * User: Dario Wunsch Date: 22.07.2010 Time: 0:18:19
  */
 public class ClosureDepsParser {
 	public static final Pattern reqRegex = Pattern.compile("\\s*goog\\.require\\s*\\(\\s*[\'\"]([^\\)]+)[\'\"]\\s*\\)");

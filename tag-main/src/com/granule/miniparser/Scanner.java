@@ -18,7 +18,7 @@ package com.granule.miniparser;
 import java.util.List;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 22.12.10
  * Time: 2:10
  */

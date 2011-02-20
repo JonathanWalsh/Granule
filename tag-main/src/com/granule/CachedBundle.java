@@ -36,7 +36,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 23.06.2010
  * Time: 2:00:08
  */

@@ -28,7 +28,7 @@ import javax.servlet.ServletContext;
 import java.util.List;
 
 /**
- * User: Dario Wünsch
+ * User: Dario Wunsch
  * Date: 12.09.2010
  * Time: 4:04:53
  */
