@@ -150,29 +150,34 @@ public class FileCache extends TagCacheImpl {
 
     private boolean readCache(String catalog, ServletContext context) throws JSONException, IOException, JSCompileException {
         BufferedReader reader = new BufferedReader(new FileReader(catalog));
-        String line;
-        boolean needRebuildCache = false;
-        while ((line = reader.readLine()) != null) {
-            try {
-                JSONObject obj = new JSONObject(line);
-                String id = obj.getString("id");
-                if (bundles.containsKey(id))
+        boolean needRebuildCache;
+        try {
+            String line;
+            needRebuildCache = false;
+            while ((line = reader.readLine()) != null) {
+                try {
+                    JSONObject obj = new JSONObject(line);
+                    String id = obj.getString("id");
+                    if (bundles.containsKey(id))
+                        needRebuildCache = true;
+                    CachedBundle cs = new CachedBundle();
+                    cs.loadFromJSON(obj, cacheFolder);
+                    CompressorSettings settings = TagCacheFactory.getCompressorSettings(context.getRealPath("/"));
+                    if (cs.getOptions() != null)
+                        settings.setOptions(cs.getOptions());
+                    String signature = generateSignature(settings, cs.getFragments(), cs.getOptions(), cs.isScript());
+                    String targetId = generateId(signature);
+                    if (targetId.equalsIgnoreCase(id)) {
+                        signatureToId.put(signature, id);
+                        bundles.put(id, cs);
+                    }
+                } catch (Exception e) {
                     needRebuildCache = true;
-                CachedBundle cs = new CachedBundle();
-                cs.loadFromJSON(obj, cacheFolder);
-                CompressorSettings settings = TagCacheFactory.getCompressorSettings(context.getRealPath("/"));
-                if (cs.getOptions() != null)
-                    settings.setOptions(cs.getOptions());
-                String signature = generateSignature(settings, cs.getFragments(), cs.getOptions(), cs.isScript());
-                String targetId = generateId(signature);
-                if (targetId.equalsIgnoreCase(id)) {
-                    signatureToId.put(signature, id);
-                    bundles.put(id, cs);
+                    logger.error("Could not load bundle from catalog:", e);
                 }
-            } catch (Exception e) {
-                needRebuildCache = true;
-                logger.error("Could not load bundle from catalog:", e);
             }
+        } finally {
+            reader.close();
         }
         return needRebuildCache;
     }
