@@ -32,7 +32,7 @@ import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
 
 /**
- * User: Dario W?nsch
+ * User: Dario Wunsch
  * Date: 20.08.2010
  * Time: 4:16:28
  */
