@@ -55,7 +55,8 @@ public class Tag {
     }
 
     public void setName(String name) {
-        this.name = name;
+    	//fix string memory due Parser based on substring
+    	this.name = new String(name);
     }
 
     public String getContent() {
@@ -63,7 +64,8 @@ public class Tag {
     }
 
     public void setContent(String content) {
-        this.content = content;
+        //fix string memory due Parser based on substring
+    	this.content = new String(content);
     }
 
     public int getBegin() {

@@ -31,7 +31,8 @@ public class Attribute {
     }
 
     public void setName(String name) {
-        this.name = name;
+    	//fix string memory due Parser based on substring
+    	this.name = new String(name);
     }
 
     public String getValue() {
@@ -39,7 +40,8 @@ public class Attribute {
     }
 
     public void setValue(String value) {
-        this.value = value;
+    	//fix string memory due Parser based on substring
+    	this.value = new String(value);
     }
 
     public int getBegin() {
