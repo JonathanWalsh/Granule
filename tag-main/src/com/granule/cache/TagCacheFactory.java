@@ -32,7 +32,10 @@ import com.granule.utils.Utf8Properties;
  * Time: 3:34:11
  */
 public class TagCacheFactory {
-
+	public final static String PRODUCTION_PATH = "/WEB-INF/granule.properties";
+	public final static String DEBUG_PATH = "/WEB-INF/granule.debug.properties";
+	public final static String DEVELOPER_PATH = "/WEB-INF/granule.developer.properties";
+	
     private static TagCacheImpl instance = null;
 
     public static TagCache getInstance() throws JSCompileException {
@@ -82,13 +85,20 @@ public class TagCacheFactory {
     }
 
     private static void loadSettings(String rootPath, HashMap<String, String> addition, boolean productionSettings) throws IOException {
-        String realPath = rootPath + "/WEB-INF/granule.properties";
-        String debugPath = rootPath + "/WEB-INF/granule.debug.properties";
-        if (new File(realPath).exists())
-            settings.load(new FileInputStream(realPath));
-        if (!productionSettings && new File(debugPath).exists())
-            settings.load(new FileInputStream(debugPath));
-        if (addition!=null) {
+       
+        File productionPropertiesFile = new File(rootPath+PRODUCTION_PATH);
+		if (productionPropertiesFile.exists())
+            settings.load(new FileInputStream(productionPropertiesFile));
+        
+		File debugPropertiesFile = new File(rootPath+DEBUG_PATH);
+		if (!productionSettings && debugPropertiesFile.exists())
+            settings.load(new FileInputStream(debugPropertiesFile));
+    
+		File developerPropertiesFile = new File(rootPath+DEVELOPER_PATH);
+		if (!productionSettings && developerPropertiesFile.exists())
+            settings.load(new FileInputStream(developerPropertiesFile));
+ 		
+		if (addition!=null) {
             settings.putAll(addition);
         }
         settingsLoaded = true;
