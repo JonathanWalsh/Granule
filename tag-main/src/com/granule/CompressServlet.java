@@ -15,20 +15,21 @@
  */
 package com.granule;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.Properties;
-import java.util.logging.Level;
+import com.granule.cache.TagCacheFactory;
+import com.granule.logging.Logger;
+import com.granule.logging.LoggerFactory;
+import com.granule.utils.PathUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.granule.cache.TagCacheFactory;
-import com.granule.logging.Logger;
-import com.granule.logging.LoggerFactory;
-import com.granule.utils.PathUtils;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Properties;
+import java.util.logging.Filter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * User: Dario Wunsch
@@ -37,36 +38,47 @@ import com.granule.utils.PathUtils;
  */
 public class CompressServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -2526640346318371192L;
+    private static final long serialVersionUID = -2526640346318371192L;
 
-	private static final String ID_PARAMETER = "id";
+    private static final String CLOSURE_COMPILER_PACKAGE_NAME = "com.google.javascript.jscomp";
+
+    private static final String ID_PARAMETER = "id";
 
     private static final String VERSION_KEY = "version";
 
     private static String version = "unknown";
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+            IOException {
         process(request, response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+            IOException {
         process(request, response);
     }
 
-    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException,
+            ServletException {
         String id = request.getParameter(ID_PARAMETER);
-        java.util.logging.Logger.getLogger("com.google.javascript.jscomp.PhaseOptimizer").setLevel(Level.WARNING);
         (new CompressorHandler()).handle(request, response, id);
     }
 
     @Override
     public void init() throws ServletException {
+        java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger(CLOSURE_COMPILER_PACKAGE_NAME);
+        Filter logFilter = new CompilerLogFilter();
+        rootLogger.setFilter(logFilter);
+        rootLogger = java.util.logging.Logger.getLogger(CLOSURE_COMPILER_PACKAGE_NAME + ".Phas" +
+                "eOptimizer");
+        rootLogger.setFilter(logFilter);
+
         try {
             TagCacheFactory.init(getServletConfig().getServletContext());
         } catch (IOException e) {
             throw new ServletException(e);
         }
-        
+
         loadVersion();
         logger.info(MessageFormat.format("Granule {0} Started", version));
     }
@@ -81,6 +93,14 @@ public class CompressServlet extends HttpServlet {
             logger.warn("Can not load config.properties", e);
         }
     }
+
+    public class CompilerLogFilter implements Filter {
+        public boolean isLoggable(LogRecord lr) {
+            return !(lr.getSourceClassName().startsWith(CLOSURE_COMPILER_PACKAGE_NAME) && lr.getLevel().intValue() <
+                    Level.WARNING.intValue());
+        }
+    }
+
 
     private static final Logger logger = LoggerFactory.getLogger(CompressServlet.class);
 }
