@@ -1,7 +1,5 @@
 <project name="granule" basedir="." default="dist">
 
-   
-
     <!-- define other variables -->
     <property name="src.dir" value="${basedir}/src"/>
     <property name="test.dir" value="${basedir}/test"/>
@@ -13,6 +11,8 @@
     <property file="${src.dir}/com/granule/config.properties"/>
     <property name="jarfile" value="${build.dir}/${ant.project.name}${version}.jar"/>
     <property name="distfile" value="${build.dir}/${ant.project.name}${version}.zip"/>
+    <property name="webinf" value="../jsp-demo/web/WEB-INF"/>
+    
     <property name="target-jdk" value="1.5"/>
 
     <!-- set the classpath for the project              -->
@@ -41,6 +41,7 @@
 		    <fileset dir="${src.dir}" includes="**/*.properties" />
 		</copy>
     </target>
+    
     <target name="jar" depends="compile">
         <jar destfile="${jarfile}" update="true">
             <fileset dir="${classes.dir}"/>
@@ -53,11 +54,12 @@
             </manifest>
         </jar>
     </target>
+    
     <target name="dist" depends="test,jar">
         <zip destfile="${distfile}">
-            <fileset dir="${basedir}/files" includes="granule.properties"/>
-            <fileset dir="${basedir}/files" includes="granule.debug.properties"/>
-            <fileset dir="${basedir}/files" includes="web.xml"/>
+            <zipfileset dir="${webinf}" prefix="WEB-INF" includes="granule.properties"/>
+            <zipfileset dir="${webinf}" prefix="WEB-INF" includes="granule.debug.properties"/>
+            <zipfileset dir="${webinf}" prefix="WEB-INF" includes="web.xml"/>
 			<fileset dir="${basedir}/.." includes="LICENSE"/>
     		<fileset dir="${basedir}/.." includes="NOTICE"/>
             <zipfileset dir="${build.dir}" prefix="lib" includes="${ant.project.name}${version}.jar"/>
@@ -74,6 +76,7 @@
             <classpath refid="classpath.path"/>
         </javac>
     </target>
+    
     <target name="test"
             depends="compile-tests"
             description="compile and execute JUnit tests">

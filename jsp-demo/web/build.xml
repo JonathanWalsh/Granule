@@ -1,4 +1,4 @@
-<project name="giraffe" default="granula">
+<project name="granula-ant" default="granula">
   <target name="granula" description="Build offline cache for granula">
     <path id="granula-classpath">
                 <fileset dir="WEB-INF/lib">
