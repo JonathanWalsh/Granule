@@ -220,7 +220,7 @@ public class FileCache extends TagCacheImpl {
         }
     }
 
-    private void deleteUnusedBundleFiles() {
+    private int deleteUnusedBundleFiles() {
         File f = new File(cacheFolder);
         String[] files = f.list(new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -229,11 +229,18 @@ public class FileCache extends TagCacheImpl {
                 return (name.endsWith(".js") || name.endsWith(".css"));
             }
         });
-        for (String s : files) {
-            if (!bundles.containsKey(s.substring(0, s.indexOf(".")))) {
-                (new File(cacheFolder + "/" + s)).delete();
-            }
-        }
+        int deleted=0;
+        try {
+        	for (String s : files) {
+			    if (!bundles.containsKey(s.substring(0, s.indexOf(".")))) {
+			        (new File(cacheFolder + "/" + s)).delete();
+			        deleted++;
+			    }
+			}
+     	} catch (Exception e) {
+     		  logger.error("Error while deleting files from folder "+cacheFolder , e);
+		}
+	   	return deleted;
     }
 
     public void initForStandalone(String rootPath, CompressorSettings settings) {
@@ -267,7 +274,10 @@ public class FileCache extends TagCacheImpl {
                 	emptyCacheFolder();
                     rebuildCache(catalogFilename);
                 }
-                else deleteUnusedBundleFiles();
+                else { 
+                	if (deleteUnusedBundleFiles()>0) 
+                		 rebuildCache(catalogFilename);
+                }
             } catch (Exception e) {
                 logger.error("Error while reading cache catalog", e);
             }
