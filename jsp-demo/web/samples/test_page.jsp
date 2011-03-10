@@ -11,18 +11,18 @@
   <div style="clear: both;">&nbsp;</div>
   <span id="label_dp"></span>
   <br><br>
+  
   <%@include file="includes/test1.inc"%>
 
   <g:compress method="closure-compiler">
-  <script src="../js/closure/goog/base.js"></script>
-
-  <script>
+   <script src="../js/closure/goog/base.js"></script>
+   <script>
     goog.require('goog.dom');
     goog.require('goog.date');
     goog.require('goog.i18n.DateTimeSymbols');
     goog.require('goog.ui.DatePicker');
-  </script>
-  <script type="text/javascript">
+   </script>
+   <script type="text/javascript">
     var dp = new goog.ui.DatePicker();
     dp.render(document.getElementById('widget_dp'));
 
@@ -33,7 +33,7 @@
     });
     goog.dom.setTextContent(document.getElementById('label_dp'),
                             dp.getDate().toIsoString(true));
-  </script>
+   </script>
   </g:compress>
   </body>
 </html>
