@@ -126,7 +126,8 @@ public class JspProcessor {
                     String pa = "";
                     if (!file.trim().startsWith("/") && file.indexOf("/")>=0)
                         pa = file.substring(0, file.lastIndexOf("/"));
-                    file =  webAppRootPath + "/" + PathUtils.calcPath((pathAddition.equals("")?"":(pathAddition+"/"))+file, request, null);
+                    file =  webAppRootPath + "/" + PathUtils.calcPath(
+                            (pathAddition.equals("")||file.startsWith("/")?"":(pathAddition+"/"))+file, request, null);
                     errorCount = +processFile(file, webAppRootPath, request, settings, pa);
                 }
             }
