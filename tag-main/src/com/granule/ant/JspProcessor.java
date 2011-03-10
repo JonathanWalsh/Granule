@@ -80,11 +80,12 @@ public class JspProcessor {
         if (!servletName.startsWith("/"))
             servletName = "/" + servletName;
         IRequestProxy request = new SimpleRequestProxy(webAppRootPath, servletName);
-        errorCount = processFile(filename, webAppRootPath, request, settings);
+        errorCount = processFile(filename, webAppRootPath, request, settings, "");
         return errorCount;
     }
 
-    private int processFile(String filename, String webAppRootPath, IRequestProxy request, CompressorSettings settings) {
+    private int processFile(String filename, String webAppRootPath, IRequestProxy request, CompressorSettings settings,
+                            String pathAddition) {
         int errorCount = 0;
         Source source = null;
         try {
@@ -121,8 +122,12 @@ public class JspProcessor {
             } else if (el.getName().equals("%")) {
                 Attributes attrs = source.parseAttributes(el);
                 if (attrs != null && attrs.isValueExists("include") && attrs.isValueExists("file")) {
-                    String file = webAppRootPath + "/" + PathUtils.calcPath(attrs.getValue("file"), request, null);
-                    errorCount = +processFile(file, webAppRootPath, request, settings);
+                    String file = attrs.getValue("file");
+                    String pa = "";
+                    if (!file.trim().startsWith("/") && file.indexOf("/")>=0)
+                        pa = file.substring(0, file.lastIndexOf("/"));
+                    file =  webAppRootPath + "/" + PathUtils.calcPath((pathAddition.equals("")?"":(pathAddition+"/"))+file, request, null);
+                    errorCount = +processFile(file, webAppRootPath, request, settings, pa);
                 }
             }
         }
