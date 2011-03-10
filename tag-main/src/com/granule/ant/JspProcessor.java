@@ -109,8 +109,7 @@ public class JspProcessor {
                     if (body.contains("<%--"))
                         body = removeJspComments(body);
                     if (body.contains("<%")) {
-                        errorCount++;
-                        logger.error("Dynamic content found, tag skipped in file " + filename);
+                        logger.warn("Dynamic content found, tag skipped in file " + filename);
                     } else {
                         CompressTagHandler tagHandler = new CompressTagHandler(id, method, options, basepath);
                         tagHandler.handleTag(request, body);
@@ -128,7 +127,7 @@ public class JspProcessor {
                         pa = file.substring(0, file.lastIndexOf("/"));
                     file =  webAppRootPath + "/" + PathUtils.calcPath(
                             (pathAddition.equals("")||file.startsWith("/")?"":(pathAddition+"/"))+file, request, null);
-                    errorCount = +processFile(file, webAppRootPath, request, settings, pa);
+                    errorCount += processFile(file, webAppRootPath, request, settings, pa);
                 }
             }
         }
