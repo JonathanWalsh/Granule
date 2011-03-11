@@ -58,7 +58,7 @@ public class FileCache extends TagCacheImpl {
     private BufferedOutputStream catalog;
 
     private FileCache() {
-        initTime = 0;
+        super();
     }
 
     /*
