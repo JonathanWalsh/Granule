@@ -10,13 +10,13 @@
 
 </head>
 <body class="tundra">
+<g:compress>
 <script type="text/javascript">
     var djConfig = {
         parseOnLoad: true,
         baseUrl: "<%=request.getContextPath()%>/js/dojo-150/dojo/"
     };
 </script>
-<g:compress>
 <script type="text/javascript" src="../js/dojo-150/dojo/dojo.js"></script>
 <script type="text/javascript">
     dojo.require("dijit.form.DateTextBox");
