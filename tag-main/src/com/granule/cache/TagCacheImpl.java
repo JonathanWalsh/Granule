@@ -27,7 +27,7 @@ import com.granule.FragmentDescriptor;
  */
 public abstract class TagCacheImpl implements TagCache {
 
-	protected long initTime;
+	protected long initTime = System.currentTimeMillis();
 	
 	// Map script signature to script id
     protected HashMap<String, String> signatureToId = new HashMap<String, String>();
