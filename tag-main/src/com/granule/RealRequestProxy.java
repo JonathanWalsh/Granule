@@ -45,6 +45,10 @@ public class RealRequestProxy implements IRequestProxy {
         return request.getServletPath();
     }
 
+    public String getBasePath() {
+        return request.getContextPath();
+    }
+    
     public String getContextPath() {
         return request.getContextPath();
     }

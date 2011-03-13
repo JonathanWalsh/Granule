@@ -26,7 +26,7 @@ import java.util.HashMap;
 public class SimpleRequestProxy implements IRequestProxy {
     private HashMap<String, Object> attributes = new HashMap<String, Object>();
 
-    private String basePath = "";
+    private String basePath;
     private String servletPath = "";
 
     public SimpleRequestProxy(String basePath) {
@@ -58,6 +58,18 @@ public class SimpleRequestProxy implements IRequestProxy {
     }
 
     public String getContextPath() {
-        return "/test";
+        return servletPath;
     }
+    
+    public String getBasePath() {
+		return basePath;
+	}
+
+	@Override
+	public String toString() {
+		return "SimpleRequestProxy [attributes=" + attributes + ", basePath="
+				+ basePath + ", servletPath=" + servletPath + "]";
+	}
+
+	
 }

@@ -96,7 +96,7 @@ public final class CSSHandler {
     public String handle(FragmentDescriptor fd, IRequestProxy request, CompressorSettings settings,
                          List<FragmentDescriptor> deps) throws JSCompileException {
         try {
-            if (settings.isIgnoreMissedFiles() && fd instanceof ExternalFragment &&
+            if (fd instanceof ExternalFragment && settings.isIgnoreMissedFiles() && 
                     !(new File(request.getRealPath(((ExternalFragment) fd).getFilePath()))).exists()) {
                 logger.warn(MessageFormat.format("File {0} not found, ignored", ((ExternalFragment) fd).getFilePath()));
                 return "";

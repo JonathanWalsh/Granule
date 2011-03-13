@@ -151,21 +151,48 @@ public class PathUtils {
         if (path.startsWith("/")) {
             path = subtractContextRoot(path, request.getContextPath());
         } else {
-            String servletPath = basepath==null?request.getServletPath():basepath;
+            String servletPath = (basepath==null||basepath.length()==0)?request.getServletPath():basepath;
             if (servletPath.indexOf('/') != -1)
                 path = servletPath.substring(0, servletPath.lastIndexOf('/') + 1) + path;
         }
         return clean(path);
     }
     
-	public static InputStream getResourceAsStream(String fileName) {
-		InputStream is = ClassLoader.getSystemClassLoader()
-				.getResourceAsStream(fileName);
+	public static InputStream getResourceAsStream(Class<?> clazz,String fileName) {
+		InputStream is=clazz.getClassLoader().getResourceAsStream(fileName);
+		if (is == null) {
+			is = ClassLoader.getSystemResourceAsStream(fileName);
+		}
 		if (is == null) {
 			is = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream(fileName);
 		}
 		return is;
+	}
+	
+	public static String getRelativeFolderPath(String filePath) {
+		String folderPath;
+		if (filePath.indexOf("/") == -1 || filePath.lastIndexOf('/') == 0)
+			folderPath = "";
+		else
+			folderPath = filePath.substring(filePath.startsWith("/") ? 1 : 0,
+					filePath.lastIndexOf("/"));
+		if (folderPath.length() > 0
+				&& folderPath.charAt(folderPath.length() - 1) != '/')
+			folderPath += "/";
+		return folderPath;
+	}
+	
+	public static String getFolderPath(String filePath) {
+		String folderPath;
+		if (filePath.indexOf("/") == -1 || filePath.lastIndexOf('/') == 0)
+			folderPath = "";
+		else
+			folderPath = filePath.substring(0,filePath.lastIndexOf("/"));
+		if (folderPath.length() > 0
+				&& folderPath.charAt(folderPath.length() - 1) != '/')
+			folderPath += "/";
+		return folderPath;
 	}
 
 }

@@ -59,7 +59,8 @@ public class JspProcessor {
         TagCacheFactory.getProductionCompressorSettings(rootPath, additions);
         TagCacheFactory.init(rootPath);
         for (String f : files) {
-            errorCount += processFile(f, rootPath);
+           
+        	errorCount += processFile(f, rootPath);
             if (errorCount >= MAX_ERROR_COUNT)
                 break;
         }
@@ -76,17 +77,26 @@ public class JspProcessor {
             errorCount++;
             return errorCount;
         }
-        String servletName = settings.getBasepath() == null ? PathUtils.getRelpath(filename, webAppRootPath) : settings.getBasepath();
-        if (!servletName.startsWith("/"))
+        String servletName = settings.getContextRoot();
+        if (servletName!=null&&!servletName.startsWith("/"))
             servletName = "/" + servletName;
         IRequestProxy request = new SimpleRequestProxy(webAppRootPath, servletName);
-        errorCount = processFile(filename, webAppRootPath, request, settings, "");
+     
+        System.out.println("Processing file "+filename);
+        //System.out.println(request.toString());
+        
+        String folderPath = PathUtils.getFolderPath(filename);
+        //System.out.println("Folder path "+folderPath);
+		String relpath = PathUtils.getRelpath(folderPath,webAppRootPath);
+		errorCount = processFile(filename, webAppRootPath, request, settings, relpath);
+        
         return errorCount;
     }
 
     private int processFile(String filename, String webAppRootPath, IRequestProxy request, CompressorSettings settings,
                             String pathAddition) {
-        int errorCount = 0;
+    	//System.out.println("pathAddition "+pathAddition);
+    	int errorCount = 0;
         Source source = null;
         try {
             source = new Source(new FileReader(filename));
@@ -95,6 +105,7 @@ public class JspProcessor {
             errorCount++;
             return errorCount;
         }
+        
         List<Element> els = source.getAllElements();
         for (Element el : els) {
             if (el.getName().equals(settings.getTagName())) {
@@ -124,10 +135,10 @@ public class JspProcessor {
                     String file = attrs.getValue("file");
                     String pa = "";
                     if (!file.trim().startsWith("/") && file.indexOf("/")>=0)
-                        pa = file.substring(0, file.lastIndexOf("/"));
+                        pa = file.substring(0, file.lastIndexOf("/")+1);
                     file =  webAppRootPath + "/" + PathUtils.calcPath(
-                            (pathAddition.equals("")||file.startsWith("/")?"":(pathAddition+"/"))+file, request, null);
-                    errorCount += processFile(file, webAppRootPath, request, settings, pa);
+                            (pathAddition.equals("")||file.startsWith("/")?"":(pathAddition+"/"))+file, request,"");
+                    errorCount += processFile(file, webAppRootPath, request, settings, pathAddition+pa);
                 }
             }
         }

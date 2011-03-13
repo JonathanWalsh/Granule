@@ -25,5 +25,6 @@ public interface IRequestProxy {
     public abstract Object getAttribute(String name);
     public abstract void setAttribute(String name, Object o);
     public abstract String getServletPath();
+    public abstract String getBasePath();
     public abstract String getContextPath();
 }

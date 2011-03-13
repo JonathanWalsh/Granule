@@ -36,7 +36,6 @@ public abstract class TagCacheImpl implements TagCache {
     protected HashMap<String, CachedBundle> bundles = new HashMap<String, CachedBundle>();
 
 	protected TagCacheImpl() {
-		initTime=System.currentTimeMillis();
 	}
 
 	protected String generateId(String signature) {

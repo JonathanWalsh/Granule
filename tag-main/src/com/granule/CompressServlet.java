@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
 import java.util.logging.Filter;
@@ -69,30 +70,40 @@ public class CompressServlet extends HttpServlet {
         java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger(CLOSURE_COMPILER_PACKAGE_NAME);
         Filter logFilter = new CompilerLogFilter();
         rootLogger.setFilter(logFilter);
-        rootLogger = java.util.logging.Logger.getLogger(CLOSURE_COMPILER_PACKAGE_NAME + ".Phas" +
-                "eOptimizer");
+        rootLogger = java.util.logging.Logger.getLogger(CLOSURE_COMPILER_PACKAGE_NAME + ".PhaseOptimizer");
         rootLogger.setFilter(logFilter);
 
         try {
             TagCacheFactory.init(getServletConfig().getServletContext());
+            loadVersion();
         } catch (IOException e) {
             throw new ServletException(e);
         }
 
-        loadVersion();
+    
         logger.info(MessageFormat.format("Granule {0} Started", version));
     }
-
-    private void loadVersion() {
-        Properties props = new Properties();
-        try {
-            props.load(PathUtils.getResourceAsStream("/com/granule/config.properties"));
-            if (props.containsKey(VERSION_KEY))
-                version = props.getProperty(VERSION_KEY);
-        } catch (IOException e) {
-            logger.warn("Can not load config.properties", e);
-        }
-    }
+    
+	private void loadVersion() {
+		Properties props = new Properties();
+		try {
+			InputStream resourceAsStream = PathUtils
+					.getResourceAsStream(this.getClass(), "/com/granule/config.properties");
+			try {
+				if (resourceAsStream == null)
+					logger.warn("Can not find /com/granule/config.properties resource");
+				else 
+					props.load(resourceAsStream);
+			} finally {
+				if (resourceAsStream != null)
+					resourceAsStream.close();
+			}
+			if (props.containsKey(VERSION_KEY))
+				version = props.getProperty(VERSION_KEY);
+		} catch (IOException e) {
+			logger.warn("Can not load config.properties", e);
+		}
+	}
 
     public class CompilerLogFilter implements Filter {
         public boolean isLoggable(LogRecord lr) {

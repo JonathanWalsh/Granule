@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import com.granule.utils.PathUtils;
+
 /**
  * User: Dario Wunsch
  * Date: 10.01.11
@@ -51,13 +53,7 @@ public class ExternalFragment extends FragmentDescriptor {
      * @return
      */
     public String getFolderPath() {
-        String relativePath;
-        if (filePath.indexOf("/") == -1 || filePath.lastIndexOf('/') == 0)
-            relativePath = "";
-        else relativePath = filePath.substring(filePath.startsWith("/") ? 1 : 0, filePath.lastIndexOf("/"));
-        if (relativePath.length() > 0 && relativePath.charAt(relativePath.length() - 1) != '/')
-            relativePath += "/";
-        return relativePath;
+        return PathUtils.getRelativeFolderPath(filePath);
     }
 
 	@Override

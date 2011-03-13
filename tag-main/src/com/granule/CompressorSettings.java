@@ -48,7 +48,8 @@ public class CompressorSettings {
     private String outputWrapper = null;
     private String cacheFileLocation = null;
     private String tagName = DEFAULT_TAG_NAME;
-    private String basepath = null;
+    private String contextRoot = null;
+	private String basePath = null;
 
     public static final String NONE_VALUE = "none";
     public static final String CLOSURE_COMPILER_VALUE = "closure-compiler";
@@ -84,6 +85,7 @@ public class CompressorSettings {
     public static final String WHITESPACE_ONLY_VALUE = "WHITESPACE_ONLY";
     public static final String ADVANCED_OPTIMIZATIONS_VALUE = "ADVANCED_OPTIMIZATIONS";
     public static final String DEFAULT_TAG_NAME = "g:compress";
+    public static final String CONTEXTROOT_KEY = "contextroot";
     public static final String BASEPATH_KEY = "basepath";
 
     public String getJsCompressMethod() {
@@ -215,8 +217,8 @@ public class CompressorSettings {
             cacheFileLocation = props.getProperty(CACHE_FILE_LOCATION_KEY);
         if (props.containsKey(TAG_NAME_KEY))
             tagName = props.getProperty(TAG_NAME_KEY);
-        if (props.containsKey(BASEPATH_KEY))
-            basepath = props.getProperty(BASEPATH_KEY);
+        if (props.containsKey(CONTEXTROOT_KEY))
+        	contextRoot = props.getProperty(CONTEXTROOT_KEY);
     }
 
     private void readFileListProperty(Utf8Properties props, String settingName, List<String> list) throws IOException {
@@ -293,11 +295,16 @@ public class CompressorSettings {
     public String getCacheFileLocation() {
         return cacheFileLocation;
     }
+ 
+    public String getContextRoot() {
+		return contextRoot;
+	}
 
-    public String getBasepath() {
-        return basepath;
-    }
+	public String getBasePath() {
+		return basePath;
+	}
 
+    
     public static boolean getBoolean(String str, boolean defaultvalue) {
         boolean result = "yes".equalsIgnoreCase(str)
                 || "on".equalsIgnoreCase(str)

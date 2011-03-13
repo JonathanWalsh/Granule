@@ -49,8 +49,8 @@ public class CompressTagHandler {
     private String options = null;
     private String basepath = null;
 
-    private static final String JS_DUPLICATES = "giraffe_js_duplicates";
-    private static final String CSS_DUPLICATES = "giraffe_css_duplicates";
+    private static final String JS_DUPLICATES = "granule_js_duplicates";
+    private static final String CSS_DUPLICATES = "granule_css_duplicates";
   
     public CompressTagHandler(String id, String method, String options, String basepath) {
         this.id = id;
@@ -63,7 +63,7 @@ public class CompressTagHandler {
         String newBody = oldBody;
         try {
             CompressorSettings settings = TagCacheFactory.getCompressorSettings(request.getRealPath("/"));
-            String bp = basepath == null ? settings.getBasepath() : basepath;
+            String bp = basepath == null ? settings.getBasePath() : basepath;
             // JavaScript processing
             String opts = null;
             if (method != null)
@@ -92,16 +92,18 @@ public class CompressTagHandler {
                         if (attrs.isValueExists("src")) {
                             String src = attrs.getValue("src");
                             if (PathUtils.isWebAddress(src) || !PathUtils.isValidJs(src))
-                                throw new JSCompileException("Dynamic or remote scripts can not be combined.");
+                                throw new JSCompileException("Dynamic or remote scripts can not be combined. src="+src);
 
-                            if (settings.isIgnoreMissedFiles() && !(new File(request.getRealPath(PathUtils.calcPath
-                                    (src, request, bp)))).exists()) {
+                            String path = PathUtils.calcPath
+                                    (src, request, bp);
+							File file = new File(request.getRealPath(path));
+							//System.out.println("src="+src+"\npath="+path+"\nrealPath="+request.getRealPath(path)+"\ncontextPath="+request.getContextPath());
+							if (settings.isIgnoreMissedFiles() && !file.exists()) {
                                 addFile = false;
-                                logger.warn(MessageFormat.format("File {0} not found, ignored",
-                                        PathUtils.calcPath(src, request, bp)));
+                                logger.warn(MessageFormat.format("File {0} not found, ignored. Real Path={1}",path,request.getRealPath(path)));
                             }
                             if (addFile) {
-                                desc = new ExternalFragment(PathUtils.calcPath(src, request, bp));
+                                desc = new ExternalFragment(path);
                             }
                         } else {
                             desc = new InternalFragment(e.getContentAsString());
@@ -249,7 +251,7 @@ public class CompressTagHandler {
     private String processChunk(String chunk, IRequestProxy request, CompressorSettings settings)
             throws JSCompileException {
         Source source = new Source(chunk);
-        String bp = basepath == null ? settings.getBasepath() : basepath;
+        String bp = basepath == null ? settings.getBasePath() : basepath;
         List<Element> links = source.getAllElements(Parser.LINK);
         if (links.size() > 0) {
             HashSet<String> cssDuplicates = new HashSet<String>();
@@ -277,22 +279,20 @@ public class CompressTagHandler {
                     }
                     String href = attrs.getValue("href");
                     if (PathUtils.isWebAddress(href) || !PathUtils.isValidCss(href))
-                        throw new JSCompileException("Dynamic or remote stylesheets can not be combined.");
-                    if (settings.isCleanCssDuplicates()
-                            && cssDuplicates.contains(media + PathUtils.clean(PathUtils.calcPath(href, request,
-                            bp)))) {
+                        throw new JSCompileException("Dynamic or remote stylesheets can not be combined. href="+href);
+                    String path = PathUtils.calcPath(href, request, bp);
+					if (settings.isCleanCssDuplicates()
+                            && cssDuplicates.contains(media + path)) {
                         eliminatedStyles.add(i);
-                    } else if (settings.isIgnoreMissedFiles() && !(new File(request.getRealPath(PathUtils.calcPath
-                            (href, request, bp)))).exists()) {
+                    } else if (settings.isIgnoreMissedFiles() && !(new File(request.getRealPath(path))).exists()) {
                         eliminatedStyles.add(i);
-                        logger.warn(MessageFormat.format("File {0} not found, ignored", PathUtils.calcPath(href,
-                                request, bp)));
+                        logger.warn(MessageFormat.format("File {0} not found, ignored. Real Path={1}",path,request.getRealPath(path)));
                     } else {
-                        FragmentDescriptor bd = new ExternalFragment(PathUtils.calcPath(href, request, bp));
+                        FragmentDescriptor bd = new ExternalFragment(path);
                         md.fragments.add(bd);
                         md.indexes.add(i);
                         if (settings.isCleanCssDuplicates())
-                            cssDuplicates.add(media + PathUtils.clean(PathUtils.calcPath(href, request, bp)));
+                            cssDuplicates.add(media + path);
                     }
                 }
             }
