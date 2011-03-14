@@ -80,9 +80,9 @@ public class BuildCacheTask extends Task {
         } catch (IOException e) {
             throw new BuildException(e);
         }
-        if (errorCount>0 && errorCount<0)
+        if (errorCount>0)
             System.out.println("Build cache errors!!! "+errorCount);
-        if (errorCount>=JspProcessor.MAX_ERROR_COUNT)
+        if (errorCount>=0)
             throw new BuildException("Build cache errors!!! " + errorCount);
     }
 }
