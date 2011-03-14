@@ -36,15 +36,14 @@ List of features
   * JDK1.5 and higher even for Google Closure Compiler.
 
 ## Installation Granule Tag Library ##
-1. Download the binary distribution of Granule Tag Library by following this URL: http://code.google.com/p/granule/downloads/list (granuleNNN.zip) and unpack the compressed file.
+1. Download the binary distribution of Granule Tag Library by following this URL: [http://code.google.com/p/granule/downloads/list] http://code.google.com/p/granule/downloads/list (granuleNNN.zip) and unpack the compressed file.
 
 2. Copy granuleNNN.jar in the distribution’s ‘lib’ directory to your web applications WEB-NF\lib directory.
 
-3. To use the granule compress tag, you must include taglib directive {{{<%@ taglib uri="http://granule.com/tags" prefix="g" %> }}}at the top of each JSP that uses this library.
+3. To use the granule compress tag, you must include taglib directive <%@ taglib uri="http://granule.com/tags" prefix="g" %> at the top of each JSP that uses this library.
 
-4. Copy the {{{<servlet> and <servlet-mapping>}}} declarations from web.xml (look below) from compressed file into your /WEB-INF/web.xml 
-{{{  
-  <servlet>
+4. Copy the <servlet> and <servlet-mapping> declarations from web.xml (look below) from compressed file into your /WEB-INF/web.xml 
+    <servlet>
         <servlet-name>CompressServlet</servlet-name>
         <servlet-class>com.granule.CompressServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
@@ -57,36 +56,35 @@ List of features
         <servlet-name>CompressServlet</servlet-name>
         <url-pattern>/combined.css</url-pattern>
     </servlet-mapping>
-}}}
 
 5. Put <g:compress> tags around the lists of script decorations (JS or CSS). For example -
-{{{
-<g:compress>
-  <link rel="stylesheet" type="text/css" href="css/dp.css"/>
-  <link rel="stylesheet" type="text/css" href="css/demo.css"/>    
-</g:compress>
-...
-<div id="datepicker"></div>
-<g:compress>
-  <script type="text/javascript" src="common.js"/>
-  <script type="text/javascript" src="closure/goog/base.js"/>
-  <script>
-       goog.require('goog.dom');
-       goog.require('goog.date');
-       goog.require('goog.ui.DatePicker');
-  </script>
-  <script type="text/javascript">
-      var dp = new goog.ui.DatePicker();
-      dp.render(document.getElementById('datepicker'));
-  </script>
-</g:compress>
-...
-}}}
+
+    <g:compress>
+      <link rel="stylesheet" type="text/css" href="css/dp.css"/>
+      <link rel="stylesheet" type="text/css" href="css/demo.css"/>    
+    </g:compress>
+    ...
+    <div id="datepicker"></div>
+      <g:compress>
+        <script type="text/javascript" src="common.js"/>
+        <script type="text/javascript" src="closure/goog/base.js"/>
+        <script>
+          goog.require('goog.dom');
+          goog.require('goog.date');
+          goog.require('goog.ui.DatePicker');
+       </script>
+      <script type="text/javascript">
+        var dp = new goog.ui.DatePicker();
+        dp.render(document.getElementById('datepicker'));
+      </script>
+     </g:compress>
+    ...
+
 
 6.  Done. Run your web application and check output html source. It should convert CSS and JS declarations similar to this.
-{{{
-<link rel="stylesheet" type="text/css" 
-      href="/combined.css?id=cc4c21b0"/>    
 
-<script src="/combined.js?id=4658acf30"/>
-}}}
+    <link rel="stylesheet" type="text/css" 
+      href="/combined.css?id=cc4c21b0"/>    
+    
+    <script src="/combined.js?id=4658acf30"/>
+
