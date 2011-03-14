@@ -45,14 +45,15 @@ public class JspProcessor {
     public static final int MAX_ERROR_COUNT = 10;
 
     public int generateCache(List<String> files, String rootPath, String outputPath) throws IOException {
-        java.util.logging.Logger.getLogger("com.google.javascript.jscomp").setLevel(Level.WARNING);
+        rootPath=PathUtils.clean(rootPath);
+    	java.util.logging.Logger.getLogger("com.google.javascript.jscomp").setLevel(Level.WARNING);
         Parser.disableVerboseLogging();
         java.util.logging.Logger.getLogger("com.granule").setLevel(Level.INFO);
         int errorCount = 0;
         if (rootPath.endsWith("."))
             rootPath = rootPath.substring(0, rootPath.lastIndexOf("."));
         HashMap<String, String> additions = new HashMap<String, String>();
-        additions.put(CompressorSettings.CACHE_KEY, CompressorSettings.DISK_VALUE);
+        additions.put(CompressorSettings.CACHE_KEY, CompressorSettings.DISK_CACHE_VALUE);
         if (outputPath != null) {
             additions.put(CompressorSettings.CACHE_FILE_LOCATION_KEY, outputPath);
         }
@@ -68,7 +69,8 @@ public class JspProcessor {
     }
 
     private int processFile(String filename, String webAppRootPath) {
-        int errorCount = 0;
+    	filename=PathUtils.clean(filename);
+    	int errorCount = 0;
         CompressorSettings settings = null;
         try {
             settings = TagCacheFactory.getCompressorSettings(webAppRootPath);
@@ -83,10 +85,8 @@ public class JspProcessor {
         IRequestProxy request = new SimpleRequestProxy(webAppRootPath, servletName);
      
         System.out.println("Processing file "+filename);
-        //System.out.println(request.toString());
         
         String folderPath = PathUtils.getFolderPath(filename);
-        //System.out.println("Folder path "+folderPath);
 		String relpath = PathUtils.getRelpath(folderPath,webAppRootPath);
 		errorCount = processFile(filename, webAppRootPath, request, settings, relpath);
         
