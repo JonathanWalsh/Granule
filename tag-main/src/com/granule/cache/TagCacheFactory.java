@@ -51,7 +51,7 @@ public class TagCacheFactory {
 
     private static CompressorSettings initInstance(String rootPath) throws IOException {
         CompressorSettings settings = getCompressorSettings(rootPath);
-        if (settings.getCache().equals(CompressorSettings.DISK_VALUE))
+        if (settings.getCache().equals(CompressorSettings.DISK_CACHE_VALUE))
             instance = FileCache.getInstance();
         else instance = MemoryCache.getInstance();
         return settings;

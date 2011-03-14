@@ -59,7 +59,8 @@ public class CompressorSettings {
     public static final String CSSFASTMIN_VALUE = "cssfastmin";
     public static final String CACHE_KEY = "cache";
     public static final String MEMORY_VALUE = "memory";
-    public static final String DISK_VALUE = "disk";
+    public static final String DISK_CACHE_VALUE = "disk";
+    public static final String DISK_CACHE_VALUE_ADD2= "file";
     public static final String IGNORE_VALUE = "ignore";
     public static final String ALL_VALUE = "all";
     public static final String JAVASCRIPT_VALUE = "javascript";
@@ -177,8 +178,11 @@ public class CompressorSettings {
             readed = props.getProperty(CACHE_KEY);
             if (NONE_VALUE.equalsIgnoreCase(readed)
                     || MEMORY_VALUE.equalsIgnoreCase(readed)
-                    || DISK_VALUE.equalsIgnoreCase(readed))
-                cache = readed;
+                    || DISK_CACHE_VALUE.equalsIgnoreCase(readed)
+                    || DISK_CACHE_VALUE_ADD2.equalsIgnoreCase(readed))
+                if (DISK_CACHE_VALUE_ADD2.equalsIgnoreCase(readed))
+                	readed=DISK_CACHE_VALUE;
+            	cache = readed;
         }
 
         if (props.containsKey(CLOSURE_COMPILER_FORMATTING_PRETTY_PRINT_KEY))
