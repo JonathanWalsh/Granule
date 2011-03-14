@@ -82,7 +82,7 @@ public class BuildCacheTask extends Task {
         }
         if (errorCount>0)
             System.out.println("Build cache errors!!! "+errorCount);
-        if (errorCount>=0)
+        if (errorCount>0)
             throw new BuildException("Build cache errors!!! " + errorCount);
     }
 }
