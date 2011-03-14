@@ -1,4 +1,5 @@
-== Overview ==
+Overview
+=======
 Granule is an optimization solution for Java-based web applications (JSP, JSF, Grails). It combines and compresses JavaScript and CSS files into less granulated packages, increasing speed and saving bandwidth.
 
 The granule solution includes:
@@ -6,7 +7,7 @@ The granule solution includes:
 - Ant task, to include pre-compressing in your build scripts. 
 
 
-https://sites.google.com/site/granuletag/_/rsrc/1297244554577/home/demojsphtml.png
+(https://sites.google.com/site/granuletag/_/rsrc/1297244554577/home/demojsphtml.png)
 
 Granule can automatically choose minimization algorithms by content from simple whitespace removal algorithms to advanced methods as Google Closure Compiler. It helps integrate Google Closure Library by automatically calculating dependencies between JS files and providing caching or pre-compiling capabilities. 
 
@@ -16,7 +17,8 @@ The library is released under business friendly Apache 2.0 Open Source License.
 For JDK1.5 use Granule Closure Compiler.
 
 
-== List of features ==
+List of features
+===========
   *  Combine and compresses JS and CSS using different methods: on fly or in build process, CSS and JS fast compression or more sophisticated Google Closure compression, or just simple file combining. 
   *  No-lock in solution. The tag just put around existing scripts. The tag can be turn on/off on the different levels: page and application.
   *  Debug and production modes.
@@ -33,7 +35,7 @@ For JDK1.5 use Granule Closure Compiler.
   *  Can be setup to preserve license headers of JS libraries.
   * JDK1.5 and higher even for Google Closure Compiler.
 
-== Installation Granule Tag Library ==
+## Installation Granule Tag Library ##
 1. Download the binary distribution of Granule Tag Library by following this URL: http://code.google.com/p/granule/downloads/list (granuleNNN.zip) and unpack the compressed file.
 
 2. Copy granuleNNN.jar in the distribution’s ‘lib’ directory to your web applications WEB-NF\lib directory.
