@@ -7,7 +7,7 @@ The granule solution includes:
 - Ant task, to include pre-compressing in your build scripts. 
 
 
-(https://sites.google.com/site/granuletag/_/rsrc/1297244554577/home/demojsphtml.png)
+![Example](https://sites.google.com/site/granuletag/_/rsrc/1297244554577/home/demojsphtml.png)
 
 Granule can automatically choose minimization algorithms by content from simple whitespace removal algorithms to advanced methods as Google Closure Compiler. It helps integrate Google Closure Library by automatically calculating dependencies between JS files and providing caching or pre-compiling capabilities. 
 
