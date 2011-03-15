@@ -43,7 +43,7 @@ List of features
 3. To use the granule compress tag, you must include taglib directive <%@ taglib uri="http://granule.com/tags" prefix="g" %> at the top of each JSP that uses this library.
 
 4. Copy the <servlet> and <servlet-mapping> declarations from web.xml (look below) from compressed file into your /WEB-INF/web.xml 
-
+<code>
     <servlet>
         <servlet-name>CompressServlet</servlet-name>
         <servlet-class>com.granule.CompressServlet</servlet-class>
@@ -57,7 +57,7 @@ List of features
         <servlet-name>CompressServlet</servlet-name>
         <url-pattern>/combined.css</url-pattern>
     </servlet-mapping>
-
+</code>
 5. Put <g:compress> tags around the lists of script decorations (JS or CSS). For example -
 
     <g:compress>
