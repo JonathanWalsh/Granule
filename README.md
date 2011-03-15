@@ -44,19 +44,19 @@ List of features
 
 4. Copy the <servlet> and <servlet-mapping> declarations from web.xml (look below) from compressed file into your /WEB-INF/web.xml 
 
-    <servlet>
-        <servlet-name>CompressServlet</servlet-name>
-        <servlet-class>com.granule.CompressServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CompressServlet</servlet-name>
-        <url-pattern>/combined.js</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CompressServlet</servlet-name>
-        <url-pattern>/combined.css</url-pattern>
-    </servlet-mapping>
+	<servlet>
+		<servlet-name>CompressServlet</servlet-name>
+		<servlet-class>com.granule.CompressServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CompressServlet</servlet-name>
+		<url-pattern>/combined.js</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CompressServlet</servlet-name>
+		<url-pattern>/combined.css</url-pattern>
+	</servlet-mapping>
 
 5. Put <g:compress> tags around the lists of script decorations (JS or CSS). For example -
 
