@@ -3,6 +3,7 @@ Overview
 Granule is an optimization solution for Java-based web applications (JSP, JSF, Grails). It combines and compresses JavaScript and CSS files into less granulated packages, increasing speed and saving bandwidth.
 
 The granule solution includes: 
+
   *   JSP Tag library. You just need put the tag around your StyleSheets and JavaScripts to compress and combine them.
   *   Ant task, to include pre-compressing in your build scripts. 
 
