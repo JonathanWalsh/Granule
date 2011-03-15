@@ -44,43 +44,43 @@ List of features
 
 4. Copy the <servlet> and <servlet-mapping> declarations from web.xml (look below) from compressed file into your /WEB-INF/web.xml 
 
-	<servlet>
-		<servlet-name>CompressServlet</servlet-name>
-		<servlet-class>com.granule.CompressServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>CompressServlet</servlet-name>
-		<url-pattern>/combined.js</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>CompressServlet</servlet-name>
-		<url-pattern>/combined.css</url-pattern>
-	</servlet-mapping>
+		<servlet>
+			<servlet-name>CompressServlet</servlet-name>
+			<servlet-class>com.granule.CompressServlet</servlet-class>
+			<load-on-startup>1</load-on-startup>
+		</servlet>
+		<servlet-mapping>
+			<servlet-name>CompressServlet</servlet-name>
+			<url-pattern>/combined.js</url-pattern>
+		</servlet-mapping>
+		<servlet-mapping>
+			<servlet-name>CompressServlet</servlet-name>
+			<url-pattern>/combined.css</url-pattern>
+		</servlet-mapping>
 
 5. Put <g:compress> tags around the lists of script decorations (JS or CSS). For example -
-
-    <g:compress>
-      <link rel="stylesheet" type="text/css" href="css/dp.css"/>
-      <link rel="stylesheet" type="text/css" href="css/demo.css"/>    
-    </g:compress>
-    ...
-    <div id="datepicker"></div>
-      <g:compress>
-        <script type="text/javascript" src="common.js"/>
-        <script type="text/javascript" src="closure/goog/base.js"/>
-        <script>
-          goog.require('goog.dom');
-          goog.require('goog.date');
-          goog.require('goog.ui.DatePicker');
-       </script>
-      <script type="text/javascript">
-        var dp = new goog.ui.DatePicker();
-        dp.render(document.getElementById('datepicker'));
-      </script>
-     </g:compress>
-    ...
-
+	
+		<g:compress>
+		  <link rel="stylesheet" type="text/css" href="css/dp.css"/>
+		  <link rel="stylesheet" type="text/css" href="css/demo.css"/>	
+		</g:compress>
+		...
+		<div id="datepicker"></div>
+		  <g:compress>
+			<script type="text/javascript" src="common.js"/>
+			<script type="text/javascript" src="closure/goog/base.js"/>
+			<script>
+			  goog.require('goog.dom');
+			  goog.require('goog.date');
+			  goog.require('goog.ui.DatePicker');
+		   </script>
+		  <script type="text/javascript">
+			var dp = new goog.ui.DatePicker();
+			dp.render(document.getElementById('datepicker'));
+		  </script>
+		 </g:compress>
+		...
+	
 
 6.  Done. Run your web application and check output html source. It should convert CSS and JS declarations similar to this.
 
