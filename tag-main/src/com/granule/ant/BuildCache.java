@@ -18,6 +18,7 @@ package com.granule.ant;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,9 @@ import com.granule.utils.PathUtils;
  * Time: 0:57:20
  */
 public class BuildCache {
-    public static void main(String[] args) {
+    public static final String BUILD_CACHE_FAILED_MESSAGE = "Granule cache build failed. Error count: {0}";
+
+	public static void main(String[] args) {
         BuildCacheOptions options = new BuildCacheOptions();
         CmdLineParser parser = new CmdLineParser(options);
         try {
@@ -80,7 +83,7 @@ public class BuildCache {
             errorCount++;
         }
         if (errorCount>0)
-            System.out.println("Build cache errors!!!"+errorCount);
+            System.out.println(MessageFormat.format(BUILD_CACHE_FAILED_MESSAGE,errorCount));
     }
 
     private static List<String> listFiles(File directory, FilenameFilter filter) {

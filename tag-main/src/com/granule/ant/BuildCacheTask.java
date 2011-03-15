@@ -17,6 +17,7 @@ package com.granule.ant;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Arrays;
 
 import org.apache.tools.ant.BuildException;
@@ -81,8 +82,8 @@ public class BuildCacheTask extends Task {
             throw new BuildException(e);
         }
         if (errorCount>0)
-            System.out.println("Build cache errors!!! "+errorCount);
+            System.out.println(MessageFormat.format(BuildCache.BUILD_CACHE_FAILED_MESSAGE,errorCount));
         if (errorCount>0)
-            throw new BuildException("Build cache errors!!! " + errorCount);
+            throw new BuildException(MessageFormat.format(BuildCache.BUILD_CACHE_FAILED_MESSAGE,errorCount));
     }
 }
