@@ -31,8 +31,7 @@ import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
 import com.granule.parser.Attributes;
 import com.granule.parser.Element;
-import com.granule.parser.Parser;
-import com.granule.parser.Source;
+import com.granule.parser.TagReader;
 import com.granule.utils.PathUtils;
 
 /**
@@ -47,7 +46,6 @@ public class JspProcessor {
     public int generateCache(List<String> files, String rootPath, String outputPath) throws IOException {
         rootPath=PathUtils.clean(rootPath);
     	java.util.logging.Logger.getLogger("com.google.javascript.jscomp").setLevel(Level.WARNING);
-        Parser.disableVerboseLogging();
         java.util.logging.Logger.getLogger("com.granule").setLevel(Level.INFO);
         int errorCount = 0;
         if (rootPath.endsWith("."))
@@ -97,9 +95,9 @@ public class JspProcessor {
                             String pathAddition) {
     	//System.out.println("pathAddition "+pathAddition);
     	int errorCount = 0;
-        Source source = null;
+        TagReader source = null;
         try {
-            source = new Source(new FileReader(filename));
+            source = new TagReader(new FileReader(filename));
         } catch (IOException e) {
             logger.error("Could not open file", e);
             errorCount++;

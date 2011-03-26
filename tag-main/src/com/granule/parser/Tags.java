@@ -20,12 +20,8 @@ package com.granule.parser;
  * Date: 09.12.2010
  * Time: 7:01:52
  */
-public class Parser {
-    public static final String SCRIPT = "script";
-    public static final String STYLE = "style";
-    public static final String LINK = "link";
-
-    public static void disableVerboseLogging() {
-
-    }
+public interface Tags {
+    String SCRIPT = "script";
+    String STYLE = "style";
+    String LINK = "link";
 }

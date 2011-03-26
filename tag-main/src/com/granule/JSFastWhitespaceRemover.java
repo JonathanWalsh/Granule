@@ -15,47 +15,28 @@
  */
 package com.granule;
 
-/**
- * 
- * @author Jonathan Walsh 
- * 
- *
- */
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-/*
- * JS Simple and Fast Minimizator
- * 
+/**
+ * Simple and Fast JS Compresser. It removes whitespace and comments from source code in safest way is possible.
+ * Ignores IE conditional comments, 
+ *
+ * * @author Jonathan Walsh 
  */
-public class JSFastMin {
-	private static final int EOF = -1;
-
-	// States
-	private static final int TEXT = 0;
-	private static final int SLASH = 1;
-	private static final int STARTED_COMMENT = 2;
-	private static final int STAR_IN_COMMENT = 3;
-	private static final int TEXT_OK_SKIP_SPACE = 4;
-	private static final int LINE_COMMENT = 5;
-	private static final int TEXT_BREAK = 6;
-	private static final int CONDITIONAL_COMMENT = 7;
-	private static final int CLOSING_STAR_IN_COND_COMMENT = 8;
-	private static final int QUOTE = 9;
-	private static final int MAY_REGULAR_EXPR = 10;
-	private static final int REGULAR_EXPR = 11;
-
-	public void minimize(final Reader in, final Writer out) throws IOException {
-		int state = TEXT_OK_SKIP_SPACE;
-        int stateText = TEXT_OK_SKIP_SPACE;
+public class JSFastWhitespaceRemover {
+	
+	public void compress(final Reader in, final Writer out) throws IOException {
+		ParseState state = ParseState.TEXT_OK_SKIP_SPACE;
+		ParseState stateText = ParseState.TEXT_OK_SKIP_SPACE;
 		int c;
 		char prevLex = ' ';
 		int commentLength = 0;
 		int quote = -1;
-		while ((c = in.read()) != EOF) {
+		while ((c = in.read()) != -1) {
 
 			if (c == '\r' || c == '\n')
 				c = '\n';
@@ -67,7 +48,7 @@ public class JSFastMin {
 			case QUOTE:
 				out.write(c);
 				if (quote == c) {
-					state = TEXT_OK_SKIP_SPACE;
+					state = ParseState.TEXT_OK_SKIP_SPACE;
 				}
 				break;
 
@@ -83,23 +64,23 @@ public class JSFastMin {
 
 			case TEXT:
 				if (c == '/') {
-					state = SLASH;
+					state = ParseState.SLASH;
 					if (prevLex == '(' || prevLex == ',' || prevLex == '=' || prevLex == ':' || prevLex == '['
 							|| prevLex == '!' || prevLex == '&' || prevLex == '|' || prevLex == '?' || prevLex == '{'
 							|| prevLex == '}' || prevLex == ';' || prevLex == '\n')
-						state = MAY_REGULAR_EXPR;
+						state = ParseState.MAY_REGULAR_EXPR;
 					break;
 				} else if (c == ' ' || c == '{' || c == ',' || c == ';' || c == ':' || c=='=' || 
 						   c == '(' || c == '[' || c == '!' || c == '&' || c == '|' || c=='?'
 						   ) 
-					state = TEXT_OK_SKIP_SPACE;
+					state = ParseState.TEXT_OK_SKIP_SPACE;
 				else if (c == '\n')
-					state = TEXT_BREAK;
+					state = ParseState.TEXT_BREAK;
 				else if (c == '\'' || c == '"') {
-					state = QUOTE;
+					state = ParseState.QUOTE;
 					quote = c;
 				} else
-					state = TEXT;
+					state = ParseState.TEXT;
 				out.write(c);
 				stateText=state;
 				break;
@@ -108,22 +89,22 @@ public class JSFastMin {
 				if (c == '/')
 					state = stateText;
 				else if (c == '*')
-					state = STAR_IN_COMMENT;
+					state = ParseState.STAR_IN_COMMENT;
 				else
-					state = STARTED_COMMENT;
+					state = ParseState.STARTED_COMMENT;
 				break;
 
 			case MAY_REGULAR_EXPR:
 				if (c == '*') {
-					state = STARTED_COMMENT;
+					state = ParseState.STARTED_COMMENT;
 					commentLength = 0;
 				} else if (c == '/') {
-					state = LINE_COMMENT;
+					state = ParseState.LINE_COMMENT;
 				} else if (c == '\n') {
-					state = TEXT;
+					state = ParseState.TEXT;
 					out.write(c);
 				} else {
-					state = REGULAR_EXPR;
+					state = ParseState.REGULAR_EXPR;
 					out.write('/');
 					out.write(c);
 				}
@@ -131,43 +112,43 @@ public class JSFastMin {
 
 			case REGULAR_EXPR:
 				if (c == '\n') {
-					state = TEXT;
+					state = ParseState.TEXT;
 				}
 				out.write(c);
 				break;
 
 			case SLASH:
 				if (c == '*') {
-					state = STARTED_COMMENT;
+					state = ParseState.STARTED_COMMENT;
 					commentLength = 0;
 					break;
 				} else if (c == '/') {
-					state = LINE_COMMENT;
+					state = ParseState.LINE_COMMENT;
 					break;
 				} else {
 					out.write('/');
 					out.write(c);
-					state = TEXT;
+					state = ParseState.TEXT;
 				}
 				break;
 
 			case STARTED_COMMENT:
 				if (c == '*')
-					state = STAR_IN_COMMENT;
+					state = ParseState.STAR_IN_COMMENT;
 				else if (commentLength == 0 && c == '@') {
 					out.write('/');
 					out.write('*');
 					out.write(c);
-					state = CONDITIONAL_COMMENT;
+					state = ParseState.CONDITIONAL_COMMENT;
 				}
 				commentLength++;
 				break;
 
 			case CONDITIONAL_COMMENT:
 				if (c == '*')
-					state = CLOSING_STAR_IN_COND_COMMENT;
+					state = ParseState.CLOSING_STAR_IN_COND_COMMENT;
 				else
-					state = CONDITIONAL_COMMENT;
+					state = ParseState.CONDITIONAL_COMMENT;
 				out.write(c);
 				break;
 
@@ -175,15 +156,15 @@ public class JSFastMin {
 				if (c == '/')
 					state = stateText;
 				else if (c == '*')
-					state = CLOSING_STAR_IN_COND_COMMENT;
+					state = ParseState.CLOSING_STAR_IN_COND_COMMENT;
 				else
-					state = CONDITIONAL_COMMENT;
+					state = ParseState.CONDITIONAL_COMMENT;
 				out.write(c);
 				break;
 
 			case LINE_COMMENT:
 				if (c == '\n')
-					state=TEXT_OK_SKIP_SPACE;
+					state= ParseState.TEXT_OK_SKIP_SPACE;
 				break;
 
 			}
@@ -196,11 +177,29 @@ public class JSFastMin {
 		Reader in = new StringReader(s);
 		Writer out = new StringWriter(s.length());
 		try {
-			minimize(in, out);
+			compress(in, out);
 		} catch (IOException e) {
 			// Having IO exception when reading String would be strange
 			throw new RuntimeException(e);
 		}
 		return out.toString();
 	}
+}
+
+//States
+enum ParseState {
+TEXT,
+TEXT_OK_SKIP_SPACE,
+SLASH,
+STARTED_COMMENT,
+TAR_IN_COMMENT,
+EXT_OK_SKIP_SPACE,
+LINE_COMMENT,
+TEXT_BREAK,
+STAR_IN_COMMENT,
+CONDITIONAL_COMMENT,
+CLOSING_STAR_IN_COND_COMMENT,
+QUOTE,
+MAY_REGULAR_EXPR,
+REGULAR_EXPR
 }

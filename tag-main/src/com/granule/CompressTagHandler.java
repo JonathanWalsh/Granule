@@ -23,8 +23,8 @@ import com.granule.logging.LoggerFactory;
 import com.granule.parser.Attribute;
 import com.granule.parser.Attributes;
 import com.granule.parser.Element;
-import com.granule.parser.Parser;
-import com.granule.parser.Source;
+import com.granule.parser.Tags;
+import com.granule.parser.TagReader;
 import com.granule.utils.OptionsHandler;
 import com.granule.utils.PathUtils;
 
@@ -216,8 +216,8 @@ public class CompressTagHandler {
 	}*/
 
     private List<Element> getScripts(String text) {
-        Source source = new Source(text);
-        return source.getAllElements(Parser.SCRIPT);
+        TagReader source = new TagReader(text);
+        return source.getAllElements(Tags.SCRIPT);
     }
 
     /*
@@ -233,8 +233,8 @@ public class CompressTagHandler {
      }*/
 
     private List<Element> getStyles(String text) {
-        Source source = new Source(text);
-        return source.getAllElements(Parser.STYLE);
+        TagReader source = new TagReader(text);
+        return source.getAllElements(Tags.STYLE);
     }
 
     private class MediaInfo {
@@ -250,9 +250,9 @@ public class CompressTagHandler {
 
     private String processChunk(String chunk, IRequestProxy request, CompressorSettings settings)
             throws JSCompileException {
-        Source source = new Source(chunk);
+        TagReader source = new TagReader(chunk);
         String bp = basepath == null ? settings.getBasePath() : basepath;
-        List<Element> links = source.getAllElements(Parser.LINK);
+        List<Element> links = source.getAllElements(Tags.LINK);
         if (links.size() > 0) {
             HashSet<String> cssDuplicates = new HashSet<String>();
             List<Integer> eliminatedStyles = new ArrayList<Integer>();

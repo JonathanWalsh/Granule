@@ -17,8 +17,8 @@ package com.granule.tag.utils;
 
 import com.granule.parser.Attributes;
 import com.granule.parser.Element;
-import com.granule.parser.Parser;
-import com.granule.parser.Source;
+import com.granule.parser.Tags;
+import com.granule.parser.TagReader;
 import junit.framework.TestCase;
 
 import java.util.List;
@@ -32,23 +32,23 @@ public class ParserTest extends TestCase {
 
     public void testBasic() {
         String text = "";
-        Source s = new Source(text);
+        TagReader s = new TagReader(text);
         assertEquals(s.getAllElements().size(), 0);
 
         text = "  \t\t\n\n\t\n";
-        s = new Source(text);
+        s = new TagReader(text);
         assertEquals(s.getAllElements().size(), 0);
     }
 
     public void testHtmlComments() {
         String text = "  <!-- html comment <script>aaa</script> -->";
-        Source s = new Source(text);
-        assertEquals(s.getAllElements(Parser.SCRIPT).size(), 0);
+        TagReader s = new TagReader(text);
+        assertEquals(s.getAllElements(Tags.SCRIPT).size(), 0);
     }
 
     public void testAttributes() {
         String text = "<p style=\"aa aaa\" align=righT class='tt'>";
-        Source s = new Source(text);
+        TagReader s = new TagReader(text);
         Element el = s.getAllElements().get(0);
         assertEquals(el.getAttributes().getValue("StYle"), "aa aaa");
         assertEquals(el.getAttributes().getValue("ALIGN"), "righT");
@@ -57,12 +57,12 @@ public class ParserTest extends TestCase {
         assertEquals(el.getAttributes().getValue("id"), null);
 
         text = "<LINK title=style href=\"style.css\" type=text/css rel=stylesheet> ";
-        s = new Source(text);
+        s = new TagReader(text);
         assertEquals(s.getAllElements().get(0).getAttributes().getValue("type"), "text/css");
 
         text = "<script tt=\"<script src='a.js'></script>\">dddddddddd</script>";
-        s = new Source(text);
-        assertEquals(s.getAllElements(Parser.SCRIPT).get(0).getAttributes().getValue("tt"), "<script src='a.js'></script>");
+        s = new TagReader(text);
+        assertEquals(s.getAllElements(Tags.SCRIPT).get(0).getAttributes().getValue("tt"), "<script src='a.js'></script>");
     }
 
     public void testCdata() {
@@ -70,19 +70,19 @@ public class ParserTest extends TestCase {
                 "   var a = '<LINK title=style href=\"/veralab/srk_files/srkstyle.css\" type=text/css rel=stylesheet>';\n" +
                 "   alert(a.substring(5,10));\n" +
                 "</p>";
-        Source s = new Source(text);
-        assertEquals(s.getAllElements(Parser.LINK).size(),1);
+        TagReader s = new TagReader(text);
+        assertEquals(s.getAllElements(Tags.LINK).size(),1);
 
         text = "<script type=\"text/javascript\">\n" +
                 "   var a = '<LINK title=style href=\"/veralab/srk_files/srkstyle.css\" type=text/css rel=stylesheet>';\n" +
                 "   alert(a.substring(5,10));\n" +
                 "</script>";
-        s = new Source(text);
-        assertEquals(s.getAllElements(Parser.LINK).size(), 0);
+        s = new TagReader(text);
+        assertEquals(s.getAllElements(Tags.LINK).size(), 0);
 
         text = "<script>a='</script>';b=c;</script>";
-        s = new Source(text);
-        assertEquals(s.getAllElements(Parser.SCRIPT).get(0).getContentAsString(), "a='");
+        s = new TagReader(text);
+        assertEquals(s.getAllElements(Tags.SCRIPT).get(0).getContentAsString(), "a='");
     }
 
     public void testConditionalComment() {
@@ -91,8 +91,8 @@ public class ParserTest extends TestCase {
                 "<link rel=\"stylesheet\" type=\"text/css\" MEDIA=\"screen\" href=\"/css/ie/menu.css\">\n" +
                 "<![endif]-->"+
                 "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" HREF=\"/css/menu2.css\">\n";
-        Source s = new Source(text);
-        List<Element> lst = s.getAllElements(Parser.LINK);
+        TagReader s = new TagReader(text);
+        List<Element> lst = s.getAllElements(Tags.LINK);
         assertEquals(lst.size(), 2);
         assertEquals(lst.get(0).getAttributes().getValue("href"), "/css/menu1.css");
         assertEquals(lst.get(1).getAttributes().getValue("href"), "/css/menu2.css");
@@ -105,10 +105,10 @@ public class ParserTest extends TestCase {
     }
 
 	private void testInclude(String text,int tagPosition) {
-		Source s;
+		TagReader s;
 		Element includeTag;
 		Attributes includeAttributes;
-		s = new Source(text);
+		s = new TagReader(text);
         includeTag = s.getAllElements().get(tagPosition);
         includeAttributes = s.parseAttributes(includeTag);
         assertEquals(includeAttributes.isValueExists("include"), true);
@@ -139,10 +139,10 @@ public class ParserTest extends TestCase {
                 "            width: 125px;\n" +
                 "          }\n" +
                 "        </style>";
-        Source s = new Source(text);
-        assertEquals(s.getAllElements(Parser.SCRIPT).size(), 2);
-        Element firstScript = s.getAllElements(Parser.SCRIPT).get(0);
-        Element secondScript = s.getAllElements(Parser.SCRIPT).get(1);
+        TagReader s = new TagReader(text);
+        assertEquals(s.getAllElements(Tags.SCRIPT).size(), 2);
+        Element firstScript = s.getAllElements(Tags.SCRIPT).get(0);
+        Element secondScript = s.getAllElements(Tags.SCRIPT).get(1);
         assertEquals(firstScript.isContentExists(), true);
         assertEquals(secondScript.isContentExists(), true);
         assertEquals(firstScript.getContentAsString(), "");
@@ -154,12 +154,12 @@ public class ParserTest extends TestCase {
         assertEquals(secondScript.getAttributes().isValueExists("src"), false);
         assertEquals(firstScript.getAttributes().getValue("src"), "js/closure/goog/base.js");
 
-        Element link = s.getAllElements(Parser.LINK).get(0);
+        Element link = s.getAllElements(Tags.LINK).get(0);
         assertEquals(link.getAttributes().getValue("REL"), "stylesheet");
         assertEquals(link.getAttributes().get("ReL").getBegin(), text.indexOf("rel="));
         assertEquals(link.getAttributes().get("ReL").getEnd(), text.indexOf("stylesheet") + "stylesheet\"".length());
 
-        Element style = s.getAllElements(Parser.STYLE).get(0);
+        Element style = s.getAllElements(Tags.STYLE).get(0);
         assertEquals(style.getBegin(), text.indexOf("<style>"));
         assertEquals(style.getEnd(), text.indexOf("</style>") + "</style>".length());
         assertEquals(style.getContentBegin(), text.indexOf("<style>") + "<style>".length());
@@ -167,7 +167,6 @@ public class ParserTest extends TestCase {
     }
 
     public void testComplexTwo() {
-        Parser.disableVerboseLogging();
         String text = "<%@ taglib uri=\"/WEB-INF/giraffe.tld\" prefix=\"g\" %>\n" +
                 "<%@ page contentType=\"text/html;charset=UTF-8\" language=\"java\" %>\n" +
                 "<%@ include file=\"includes/test1.inc\"%>\n" +
@@ -176,7 +175,7 @@ public class ParserTest extends TestCase {
                 "  </script>\n" +
                 "  <g:compress method=\"closure-compiler\">\n" +
                 "  <script src=\"../js/closure/goog/base.js\"></script></g:compress>";
-        Source s = new Source(text);
+        TagReader s = new TagReader(text);
         List<Element> all = s.getAllElements();
         int jspTags = 0;
         int gCompressPos = 0;

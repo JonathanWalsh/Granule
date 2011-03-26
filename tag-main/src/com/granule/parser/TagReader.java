@@ -25,33 +25,33 @@ import java.util.List;
  * Date: 09.12.2010
  * Time: 7:00:27
  */
-public class Source {
-    private com.granule.miniparser.Source source;
+public class TagReader {
+    private com.granule.miniparser.TagReader tagReader;
 
-    public Source(FileReader fileReader) throws IOException {
-        source = new com.granule.miniparser.Source(fileReader);
+    public TagReader(FileReader fileReader) throws IOException {
+        tagReader = new com.granule.miniparser.TagReader(fileReader);
     }
 
-    public Source(String text) {
-        source = new com.granule.miniparser.Source(text);
+    public TagReader(String text) {
+        tagReader = new com.granule.miniparser.TagReader(text);
     }
 
     public List<Element> getAllElements() {
         List<Element> result = new ArrayList<Element>();
-        for (com.granule.miniparser.Tag tag : source.getTags())
+        for (com.granule.miniparser.Tag tag : tagReader.getTags())
             result.add(new Element(tag));
         return result;
     }
 
     public List<Element> getAllElements(String name) {
         List<Element> result = new ArrayList<Element>();
-        for (com.granule.miniparser.Tag tag : source.getTags(name))
+        for (com.granule.miniparser.Tag tag : tagReader.getTags(name))
             result.add(new Element(tag));
         return result;
     }
 
     public Attributes parseAttributes(Element el) {
-        source.parseAttributes(el.element);
+        tagReader.parseAttributes(el.element);
         return el.getAttributes();
     }
 }

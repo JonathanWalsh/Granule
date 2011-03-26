@@ -107,8 +107,8 @@ public class Compressor {
         String result = unify(scripts, request);
         try {
             StringWriter sw = new StringWriter();
-            JSFastMin min = new JSFastMin();
-            min.minimize(new StringReader(result), sw);
+            JSFastWhitespaceRemover min = new JSFastWhitespaceRemover();
+            min.compress(new StringReader(result), sw);
             result = getLicenses(scripts, settings, request) + sw.toString().trim();
         } catch (Exception e) {
             throw new JSCompileException(e);

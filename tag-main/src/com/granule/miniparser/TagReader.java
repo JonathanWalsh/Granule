@@ -25,14 +25,14 @@ import java.util.List;
  * Date: 22.12.10
  * Time: 2:09
  */
-public class Source {
+public class TagReader {
     private List<Tag> tags = new ArrayList<Tag>();
 
     private String text;
 
     private static final int BUFFER_SIZE = 1024;
 
-    public Source(FileReader reader) throws IOException {
+    public TagReader(FileReader reader) throws IOException {
         String text;
         if (reader == null) text = "";
         else {
@@ -50,13 +50,13 @@ public class Source {
         processText(text);
     }
 
-    public Source(String text) {
+    public TagReader(String text) {
         processText(text);
     }
 
     private void processText(String text) {
         this.text = text;
-        Parser p = new Parser(text);
+        MiniParser p = new MiniParser(text);
         p.parse(this);
     }
 

@@ -24,16 +24,16 @@ import java.util.List;
  * Date: 22.12.10
  * Time: 2:10
  */
-public class Parser {
+public class MiniParser {
     private String text;
     private String lowerText;
 
-    public Parser(String text) {
+    public MiniParser(String text) {
         this.text = text;
         this.lowerText = text == null ? "" : text.toLowerCase();
     }
 
-    public boolean parse(Source s) {
+    public boolean parse(TagReader s) {
         if (text == null || text.length() == 0)
             return true;
         Scanner scanner = new Scanner(text);
@@ -41,7 +41,7 @@ public class Parser {
         return true;
     }
 
-    private void parseTagContent(Source s, Scanner scanner, List<String> finishTags) {
+    private void parseTagContent(TagReader s, Scanner scanner, List<String> finishTags) {
         while (scanner.hasSymbols()) {
             scanner.skipText(finishTags);
             if (scanner.hasSymbols()) {
@@ -58,7 +58,7 @@ public class Parser {
         }
     }
 
-    private void processHtmlComment(Source s, Scanner scanner) {
+    private void processHtmlComment(TagReader s, Scanner scanner) {
         Tag t = new Tag();
         t.setName("!--");
         t.setContent("");
@@ -69,7 +69,7 @@ public class Parser {
         s.getTags().add(t);
     }
 
-    private void processHtmlDirective(Source s, Scanner scanner) {
+    private void processHtmlDirective(TagReader s, Scanner scanner) {
         Tag t = new Tag();
         t.setName("!");
         t.setContent("");
@@ -80,7 +80,7 @@ public class Parser {
         s.getTags().add(t);
     }
 
-    private void processJspTag(Source s, Scanner scanner) {
+    private void processJspTag(TagReader s, Scanner scanner) {
         Tag t = new Tag();
         t.setName("%");
         t.setContent("");
@@ -91,7 +91,7 @@ public class Parser {
         s.getTags().add(t);
     }
 
-    private void processTag(Source s, Scanner scanner, List<String> finishTags) {
+    private void processTag(TagReader s, Scanner scanner, List<String> finishTags) {
         Tag t = new Tag();
         s.getTags().add(t);
         t.setBegin(scanner.getCurrentPosition());
