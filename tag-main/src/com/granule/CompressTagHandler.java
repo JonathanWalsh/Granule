@@ -151,8 +151,8 @@ public class CompressTagHandler {
                             correction -= e.getEnd() - e.getBegin();
                         } else {
                             if (fragmentDescriptors.size() > 0) {
-                                String newText = "<script src=\"" + request.getContextPath() + "/combined.js?id="
-                                        + bundleId + "\"></script>";
+                                String newText = "<script src=\"" + PathUtils.getContextURL(request.getContextPath(),"/combined.js?id="
+                                        + bundleId) + "\"></script>";
                                 newBody = newBody.substring(0, e.getBegin() + correction) + newText
                                         + newBody.substring(e.getEnd() + correction);
                                 correction -= e.getEnd() - e.getBegin();
@@ -343,10 +343,10 @@ public class CompressTagHandler {
                 if (ld.scriptId != null) {
                     Attribute a = links.get(p).getAttributes().get("href");
                     sb.append(chunk.substring(links.get(p).getBegin(), a.getBegin()));
-                    sb.append("href=\"").append(request.getContextPath()).
-                            append("/combined.css?id=").
-                            append(ld.scriptId)
-                            .append("\" ");
+                    sb.append("href=\"");
+                    sb.append(PathUtils.getContextURL(request.getContextPath(),"/combined.css?id="));
+                    sb.append(ld.scriptId);
+                    sb.append("\" ");
                     sb.append(chunk.substring(a.getEnd(), links.get(p).getEnd()));
                 }
                 start = links.get(p).getEnd();

@@ -136,6 +136,7 @@ public class CompressorSettings {
     public void load(Utf8Properties props) throws IOException {
         String readed;
         String mode = ALL_VALUE;
+        
         if (props.containsKey(TAG_PROCESS_KEY)) {
             readed = props.getProperty(TAG_PROCESS_KEY);
             if (ALL_VALUE.equalsIgnoreCase(readed) || JAVASCRIPT_VALUE.equalsIgnoreCase(readed)
@@ -203,6 +204,7 @@ public class CompressorSettings {
                     || ADVANCED_OPTIMIZATIONS_VALUE.equalsIgnoreCase(readed))
                 optimization = readed;
         }
+        
         if (props.containsKey(CLOSURE_COMPILER_OUTPUT_WRAPPER_KEY))
             outputWrapper = props.getProperty(CLOSURE_COMPILER_OUTPUT_WRAPPER_KEY);
 
@@ -213,14 +215,18 @@ public class CompressorSettings {
             cleanJsDuplicates = getBoolean(props.getProperty(TAG_JS_CLEANDUPICATES_KEY), cleanJsDuplicates);
 
         readFileListProperty(props, CLOSURE_ADD_PATH_KEY, closurePathes);
+        
         readFileListProperty(props, KEEP_FIRST_COMMENT_PATH_KEY, keepFirstCommentPathes);
 
         if (props.containsKey(IGNORE_MISSED_FILES_KEY))
             ignoreMissedFiles = getBoolean(props.getProperty(IGNORE_MISSED_FILES_KEY), ignoreMissedFiles);
+        
         if (props.containsKey(CACHE_FILE_LOCATION_KEY))
             cacheFileLocation = props.getProperty(CACHE_FILE_LOCATION_KEY);
+        
         if (props.containsKey(TAG_NAME_KEY))
             tagName = props.getProperty(TAG_NAME_KEY);
+        
         if (props.containsKey(CONTEXTROOT_KEY))
         	contextRoot = props.getProperty(CONTEXTROOT_KEY);
     }

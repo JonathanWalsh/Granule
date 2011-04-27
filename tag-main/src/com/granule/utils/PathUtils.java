@@ -194,6 +194,13 @@ public class PathUtils {
 			folderPath += "/";
 		return folderPath;
 	}
+	
+	public static String getContextURL(String contextPath, String path) {
+    	if (contextPath==null||contextPath.length()==0||contextPath.equals("/")) {
+    		return path;
+    	}
+    	else return contextPath+path;
+	}
 
 }
 
