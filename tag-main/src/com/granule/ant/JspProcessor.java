@@ -121,7 +121,7 @@ public class JspProcessor {
                         logger.warn("Dynamic content found, tag skipped in file " + filename);
                     } else {
                         CompressTagHandler tagHandler = new CompressTagHandler(id, method, options, basepath);
-                        tagHandler.handleTag(request, body);
+                        tagHandler.handleTag(request, null, body);
                     }
                 } catch (JSCompileException e) {
                     errorCount++;

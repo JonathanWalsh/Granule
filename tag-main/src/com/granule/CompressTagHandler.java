@@ -15,19 +15,6 @@
  */
 package com.granule;
 
-import com.granule.cache.TagCache;
-import com.granule.cache.TagCacheFactory;
-import com.granule.calcdeps.CalcDeps;
-import com.granule.logging.Logger;
-import com.granule.logging.LoggerFactory;
-import com.granule.parser.Attribute;
-import com.granule.parser.Attributes;
-import com.granule.parser.Element;
-import com.granule.parser.Tags;
-import com.granule.parser.TagReader;
-import com.granule.utils.OptionsHandler;
-import com.granule.utils.PathUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -37,6 +24,19 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
+import com.granule.cache.TagCache;
+import com.granule.cache.TagCacheFactory;
+import com.granule.calcdeps.CalcDeps;
+import com.granule.logging.Logger;
+import com.granule.logging.LoggerFactory;
+import com.granule.parser.Attribute;
+import com.granule.parser.Attributes;
+import com.granule.parser.Element;
+import com.granule.parser.TagReader;
+import com.granule.parser.Tags;
+import com.granule.utils.OptionsHandler;
+import com.granule.utils.PathUtils;
 
 /**
  * User: Dario Wunsch Date: 05.07.2010 Time: 3:43:47
@@ -48,7 +48,7 @@ public class CompressTagHandler {
     private String method = null;
     private String options = null;
     private String basepath = null;
-
+    
     private static final String JS_DUPLICATES = "granule_js_duplicates";
     private static final String CSS_DUPLICATES = "granule_css_duplicates";
   
@@ -59,10 +59,10 @@ public class CompressTagHandler {
         this.basepath = basepath;
     }
 
-    public String handleTag(IRequestProxy request, String oldBody) throws JSCompileException {
+    public String handleTag(IRequestProxy requestProxy, IRequestProxy runtimRequest, String oldBody) throws JSCompileException {
         String newBody = oldBody;
         try {
-            CompressorSettings settings = TagCacheFactory.getCompressorSettings(request.getRealPath("/"));
+            CompressorSettings settings = TagCacheFactory.getCompressorSettings(requestProxy.getRealPath("/"));
             String bp = basepath == null ? settings.getBasePath() : basepath;
             // JavaScript processing
             String opts = null;
@@ -80,7 +80,7 @@ public class CompressTagHandler {
             }
 
             if (settings.isHandleJavascript()) {
-                List<Element> scripts = getScripts(newBody);
+            	List<Element> scripts = getScripts(newBody);
                 if (scripts.size() > 0) {
                     //newBody=addDynamicJSContent(request,newBody,scripts);
                     int correction = 0;
@@ -95,12 +95,12 @@ public class CompressTagHandler {
                                 throw new JSCompileException("Dynamic or remote scripts can not be combined. src="+src);
 
                             String path = PathUtils.calcPath
-                                    (src, request, bp);
-							File file = new File(request.getRealPath(path));
+                                    (src, requestProxy, bp);
+							File file = new File(requestProxy.getRealPath(path));
 							//System.out.println("src="+src+"\npath="+path+"\nrealPath="+request.getRealPath(path)+"\ncontextPath="+request.getContextPath());
 							if (settings.isIgnoreMissedFiles() && !file.exists()) {
                                 addFile = false;
-                                logger.warn(MessageFormat.format("File {0} not found, ignored. Real Path={1}",path,request.getRealPath(path)));
+                                logger.warn(MessageFormat.format("File {0} not found, ignored. Real Path={1}",path,requestProxy.getRealPath(path)));
                             }
                             if (addFile) {
                                 desc = new ExternalFragment(path);
@@ -112,13 +112,13 @@ public class CompressTagHandler {
                             fragmentDescriptors.add(desc);
                     }
                     if (settings.isCleanJsDuplicates()) {
-                        HashSet<String> jsDuplicates = getJsDuplicatesHash(request);
+                        HashSet<String> jsDuplicates = getJsDuplicatesHash(requestProxy);
                         if (jsDuplicates == null) {
                             jsDuplicates = new HashSet<String>();
-                            request.setAttribute(JS_DUPLICATES, jsDuplicates);
+                            requestProxy.setAttribute(JS_DUPLICATES, jsDuplicates);
                         }
                         try {
-                            if (CalcDeps.searchClosureLibrary(fragmentDescriptors, request) < 0) {
+                            if (CalcDeps.searchClosureLibrary(fragmentDescriptors, requestProxy) < 0) {
                                 int i = 0;
                                 while (i < fragmentDescriptors.size()) {
                                     if (fragmentDescriptors.get(i) instanceof ExternalFragment && jsDuplicates
@@ -137,33 +137,35 @@ public class CompressTagHandler {
                             throw new JSCompileException(e);
                         }
                     }
+
                     String bundleId = null;
 
                     if (fragmentDescriptors.size() > 0) {
                         TagCache tagCache = TagCacheFactory.getInstance();
-                        bundleId = tagCache.compressAndStore(request, settings, fragmentDescriptors, true, opts);
+                        bundleId = tagCache.compressAndStore(requestProxy, settings, fragmentDescriptors, true, opts);
                     }
-                    for (int i = 0; i < scripts.size(); i++) {
-                        Element e = scripts.get(i);
-                        if (i != scripts.size() - 1) {
-                            newBody = newBody.substring(0, e.getBegin() + correction)
-                                    + newBody.substring(e.getEnd() + correction);
-                            correction -= e.getEnd() - e.getBegin();
-                        } else {
-                            if (fragmentDescriptors.size() > 0) {
-                                String newText = "<script src=\"" + PathUtils.getContextURL(request.getContextPath(),"/combined.js?id="
-                                        + bundleId) + "\"></script>";
-                                newBody = newBody.substring(0, e.getBegin() + correction) + newText
-                                        + newBody.substring(e.getEnd() + correction);
-                                correction -= e.getEnd() - e.getBegin();
-                                correction += newBody.length();
-                            } else {
-                                newBody = newBody.substring(0, e.getBegin() + correction)
-                                        + newBody.substring(e.getEnd() + correction);
-                                correction -= e.getEnd() - e.getBegin();
-                            }
-                        }
-                    }
+                    if (runtimRequest!=null) //generate output only in runtime
+	                    for (int i = 0; i < scripts.size(); i++) {
+	                        Element e = scripts.get(i);
+	                        if (i != scripts.size() - 1) {
+	                            newBody = newBody.substring(0, e.getBegin() + correction)
+	                                    + newBody.substring(e.getEnd() + correction);
+	                            correction -= e.getEnd() - e.getBegin();
+	                        } else {
+	                            if (fragmentDescriptors.size() > 0) {
+	                                String newText = "<script src=\"" + PathUtils.getContextURL(runtimRequest.getContextPath(),"/combined.js?id="
+	                                        + bundleId) + "\"></script>";
+	                                newBody = newBody.substring(0, e.getBegin() + correction) + newText
+	                                        + newBody.substring(e.getEnd() + correction);
+	                                correction -= e.getEnd() - e.getBegin();
+	                                correction += newBody.length();
+	                            } else {
+	                                newBody = newBody.substring(0, e.getBegin() + correction)
+	                                        + newBody.substring(e.getEnd() + correction);
+	                                correction -= e.getEnd() - e.getBegin();
+	                            }
+	                        }
+	                    }
                 }
             } else
                 newBody = oldBody;
@@ -177,7 +179,7 @@ public class CompressTagHandler {
                     //newBody=addDynamicCSSContent(request, newBody, styles);
                     for (Element style : styles) {
                         String before = newBody.substring(start, style.getBegin());
-                        sb.append(processChunk(before, request, settings));
+                        sb.append(processChunk(before, requestProxy, runtimRequest, settings));
                         if (style.isContentExists()
                                 && settings.getCssCompressMethod()
                                 .equalsIgnoreCase(CompressorSettings.CSSFASTMIN_VALUE)) {
@@ -193,7 +195,7 @@ public class CompressTagHandler {
                         }
                     }
                 }
-                sb.append(processChunk(newBody.substring(start), request, settings));
+                sb.append(processChunk(newBody.substring(start), requestProxy, runtimRequest, settings));
                 newBody = sb.toString();
             }
 
@@ -248,7 +250,7 @@ public class CompressTagHandler {
         public String scriptId = null;
     }
 
-    private String processChunk(String chunk, IRequestProxy request, CompressorSettings settings)
+    private String processChunk(String chunk, IRequestProxy requestProxy, IRequestProxy runtimeRequest, CompressorSettings settings)
             throws JSCompileException {
         TagReader source = new TagReader(chunk);
         String bp = basepath == null ? settings.getBasePath() : basepath;
@@ -257,10 +259,10 @@ public class CompressTagHandler {
             HashSet<String> cssDuplicates = new HashSet<String>();
             List<Integer> eliminatedStyles = new ArrayList<Integer>();
             if (settings.isCleanCssDuplicates()) {
-                cssDuplicates = getCssDuplicatesHash(request);
+                cssDuplicates = getCssDuplicatesHash(requestProxy);
                 if (cssDuplicates == null) {
                     cssDuplicates = new HashSet<String>();
-                    request.setAttribute(CSS_DUPLICATES, cssDuplicates);
+                    requestProxy.setAttribute(CSS_DUPLICATES, cssDuplicates);
                 }
             }
             HashMap<String, MediaInfo> mediae = new HashMap<String, MediaInfo>();
@@ -280,13 +282,13 @@ public class CompressTagHandler {
                     String href = attrs.getValue("href");
                     if (PathUtils.isWebAddress(href) || !PathUtils.isValidCss(href))
                         throw new JSCompileException("Dynamic or remote stylesheets can not be combined. href="+href);
-                    String path = PathUtils.calcPath(href, request, bp);
+                    String path = PathUtils.calcPath(href, requestProxy, bp);
 					if (settings.isCleanCssDuplicates()
                             && cssDuplicates.contains(media + path)) {
                         eliminatedStyles.add(i);
-                    } else if (settings.isIgnoreMissedFiles() && !(new File(request.getRealPath(path))).exists()) {
+                    } else if (settings.isIgnoreMissedFiles() && !(new File(requestProxy.getRealPath(path))).exists()) {
                         eliminatedStyles.add(i);
-                        logger.warn(MessageFormat.format("File {0} not found, ignored. Real Path={1}",path,request.getRealPath(path)));
+                        logger.warn(MessageFormat.format("File {0} not found, ignored. Real Path={1}",path,requestProxy.getRealPath(path)));
                     } else {
                         FragmentDescriptor bd = new ExternalFragment(path);
                         md.fragments.add(bd);
@@ -302,7 +304,7 @@ public class CompressTagHandler {
             for (String media : mediae.keySet()) {
                 if (mediae.get(media).fragments.size() > 0) {
                     TagCache tagCache = TagCacheFactory.getInstance();
-                    mediae.get(media).bundleId = tagCache.compressAndStore(request, settings,
+                    mediae.get(media).bundleId = tagCache.compressAndStore(requestProxy, settings,
                             mediae.get(media).fragments, false, null);
                 }
             }
@@ -334,24 +336,28 @@ public class CompressTagHandler {
                         return 1;
                 }
             });
-
-            StringBuilder sb = new StringBuilder();
-            int start = 0;
-            for (LinkInfo ld : lst) {
-                int p = ld.index;
-                sb.append(chunk.substring(start, links.get(p).getBegin()));
-                if (ld.scriptId != null) {
-                    Attribute a = links.get(p).getAttributes().get("href");
-                    sb.append(chunk.substring(links.get(p).getBegin(), a.getBegin()));
-                    sb.append("href=\"");
-                    sb.append(PathUtils.getContextURL(request.getContextPath(),"/combined.css?id="));
-                    sb.append(ld.scriptId);
-                    sb.append("\" ");
-                    sb.append(chunk.substring(a.getEnd(), links.get(p).getEnd()));
-                }
-                start = links.get(p).getEnd();
-            }
-            sb.append(chunk.substring(start));
+       
+			StringBuilder sb = new StringBuilder();
+			int start = 0;
+			if (runtimeRequest != null)
+				for (LinkInfo ld : lst) {
+					int p = ld.index;
+					sb.append(chunk.substring(start, links.get(p).getBegin()));
+					if (ld.scriptId != null) {
+						Attribute a = links.get(p).getAttributes().get("href");
+						sb.append(chunk.substring(links.get(p).getBegin(), a
+								.getBegin()));
+						sb.append("href=\"");
+						sb.append(PathUtils.getContextURL(runtimeRequest
+								.getContextPath(), "/combined.css?id="));
+						sb.append(ld.scriptId);
+						sb.append("\" ");
+						sb.append(chunk.substring(a.getEnd(), links.get(p)
+								.getEnd()));
+					}
+					start = links.get(p).getEnd();
+				}
+			sb.append(chunk.substring(start));
             return sb.toString();
         } else
             return chunk;
@@ -368,4 +374,5 @@ public class CompressTagHandler {
     }
     
     private static final Logger logger = LoggerFactory.getLogger(CompressTagHandler.class);
+
 }

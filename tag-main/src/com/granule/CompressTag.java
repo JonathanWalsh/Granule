@@ -42,17 +42,17 @@ public class CompressTag extends BodyTagSupport {
     private static final String NOT_PROCESS_PARAMETER = "granule";
 
     public int doAfterBody() throws JspTagException {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        HttpServletRequest httpRequest = (HttpServletRequest) pageContext.getRequest();
         BodyContent bc = getBodyContent();
         String oldBody = bc.getString();
         bc.clearBody();
-        if (request.getParameter(NOT_PROCESS_PARAMETER) != null) {
-            boolean b = CompressorSettings.getBoolean(request.getParameter(NOT_PROCESS_PARAMETER), false);
+        if (httpRequest.getParameter(NOT_PROCESS_PARAMETER) != null) {
+            boolean b = CompressorSettings.getBoolean(httpRequest.getParameter(NOT_PROCESS_PARAMETER), false);
             if (!b)
-                request.getSession().setAttribute(NOT_PROCESS_PARAMETER, true);
-            else request.getSession().removeAttribute(NOT_PROCESS_PARAMETER);
+                httpRequest.getSession().setAttribute(NOT_PROCESS_PARAMETER, true);
+            else httpRequest.getSession().removeAttribute(NOT_PROCESS_PARAMETER);
         }
-        if (request.getSession().getAttribute(NOT_PROCESS_PARAMETER)!=null) {
+        if (httpRequest.getSession().getAttribute(NOT_PROCESS_PARAMETER)!=null) {
             try {
                 getPreviousOut().print(oldBody);
             } catch (IOException e) {
@@ -62,7 +62,8 @@ public class CompressTag extends BodyTagSupport {
         }
         try {
             CompressTagHandler compressor = new CompressTagHandler(id, method, options, basepath);
-            String newBody = compressor.handleTag(new RealRequestProxy(request), oldBody);
+            RealRequestProxy runtimeRequest = new RealRequestProxy(httpRequest);
+			String newBody = compressor.handleTag(runtimeRequest, runtimeRequest, oldBody);
             getPreviousOut().print(newBody);
         } catch (Exception e) {
             throw new JspTagException(e);
