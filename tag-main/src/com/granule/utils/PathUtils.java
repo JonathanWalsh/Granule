@@ -27,7 +27,7 @@ public class PathUtils {
 	
 	public static String subtractContextRoot(String uri, String contextRoot) {
 
-		if (contextRoot == null || contextRoot.length() == 0)
+		if (contextRoot == null || contextRoot.length() == 0 || contextRoot.equals("/"))
 			return uri;
 
 		String lowerUri = clean(uri.toLowerCase());
@@ -152,8 +152,12 @@ public class PathUtils {
             path = subtractContextRoot(path, request.getContextPath());
         } else {
             String servletPath = (basepath==null||basepath.length()==0)?request.getServletPath():basepath;
-            if (servletPath.indexOf('/') != -1)
-                path = servletPath.substring(0, servletPath.lastIndexOf('/') + 1) + path;
+            if (servletPath.indexOf('/') != -1) {
+            	int startPos=0;
+            	if (servletPath.charAt(0)=='/')
+            		startPos=1;
+                path = servletPath.substring(startPos, servletPath.lastIndexOf('/') + 1) + path;
+            }
         }
         return clean(path);
     }

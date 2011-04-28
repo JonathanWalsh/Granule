@@ -97,7 +97,7 @@ public class CompressTagHandler {
                             String path = PathUtils.calcPath
                                     (src, requestProxy, bp);
 							File file = new File(requestProxy.getRealPath(path));
-							//System.out.println("src="+src+"\npath="+path+"\nrealPath="+request.getRealPath(path)+"\ncontextPath="+request.getContextPath());
+							//System.out.println("src="+src+"\npath="+path+"\nrealPath="+requestProxy.getRealPath(path)+"\ncontextPath="+requestProxy.getContextPath());
 							if (settings.isIgnoreMissedFiles() && !file.exists()) {
                                 addFile = false;
                                 logger.warn(MessageFormat.format("File {0} not found, ignored. Real Path={1}",path,requestProxy.getRealPath(path)));
