@@ -3,7 +3,7 @@
     <property name="webapp.dir" value="${basedir}/web"/>
     <property name="classes.dir" value="${webapp.dir}/WEB-INF/classes"/>
     <property name="webapp.lib.dir" value="${webapp.dir}/WEB-INF/lib"/>
-    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="lib.dir" value="${basedir}/web/lib"/>
     <property name="tmpdir" value="${java.io.tmpdir}"/>
 
     <target name="webapp" description="Build webapp">
