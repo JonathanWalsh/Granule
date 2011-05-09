@@ -163,7 +163,10 @@ public class PathUtils {
     }
     
 	public static InputStream getResourceAsStream(Class<?> clazz,String fileName) {
-		InputStream is=clazz.getClassLoader().getResourceAsStream(fileName);
+		InputStream is=clazz.getResourceAsStream(fileName);
+		if (is == null) {
+			is=clazz.getClassLoader().getResourceAsStream(fileName);
+		}
 		if (is == null) {
 			is = ClassLoader.getSystemResourceAsStream(fileName);
 		}

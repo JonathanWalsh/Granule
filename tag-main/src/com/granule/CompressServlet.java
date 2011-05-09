@@ -86,13 +86,24 @@ public class CompressServlet extends HttpServlet {
     
 	private void loadVersion() {
 		Properties props = new Properties();
-        try {
-            props.load(getClass().getResourceAsStream("/com/granule/config.properties"));
-            if (props.containsKey(VERSION_KEY))
-                version = props.getProperty(VERSION_KEY);
-        } catch (IOException e) {
-            logger.warn("Can not load config.properties", e);
-        }
+		try {
+			InputStream resourceAsStream = PathUtils.getResourceAsStream(this
+					.getClass(), "/com/granule/config.properties");
+			try {
+				if (resourceAsStream == null)
+					logger
+							.warn("Can not find /com/granule/config.properties resource");
+				else
+					props.load(resourceAsStream);
+			} finally {
+				if (resourceAsStream != null)
+					resourceAsStream.close();
+			}
+			if (props.containsKey(VERSION_KEY))
+				version = props.getProperty(VERSION_KEY);
+		} catch (IOException e) {
+			logger.warn("Can not load config.properties", e);
+		}
 	}
 
     public class CompilerLogFilter implements Filter {
