@@ -6,13 +6,17 @@
     <property name="lib.dir" value="${basedir}/web/lib"/>
     <property name="tmpdir" value="${java.io.tmpdir}"/>
 
+    <property file="../tag-main/src/com/granule/config.properties"/>
+
+    <property name="target-jdk" value="1.5"/>
+
     <target name="webapp" description="Build webapp">
         <ant antfile="../tag-main/build.xml" dir="../tag-main" inheritAll="false"/>
         <delete dir="${classes.dir}" />
         <mkdir dir="${classes.dir}" />
         <javac srcdir="${src.dir}"
                destdir="${classes.dir}"
-               excludes=".svn">
+               excludes=".svn" target="${target-jdk}">
             <classpath>
                 <fileset dir="${lib.dir}">
                     <include name="*.jar"/>
@@ -28,9 +32,10 @@
         <antcall target="granule"/>
         <delete dir="build"/>
         <mkdir dir="build"/>
-        <war destfile="build/jsp-demo.war">
+        <war destfile="build/jsp-demo-${version}.war">
             <fileset dir="${webapp.dir}">
                 <include name="*/**"/>
+                <exclude name="lib/**"/>
                 <exclude name="build.xml"/>
 				<exclude name="WEB-INF/granule.debug.properties"/>
                 <exclude name="WEB-INF/granule.developer.properties"/>
