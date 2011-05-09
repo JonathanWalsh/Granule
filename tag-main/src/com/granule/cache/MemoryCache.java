@@ -36,7 +36,7 @@ public class MemoryCache extends TagCacheImpl {
     protected static TagCacheImpl instance = new MemoryCache();
 
     private MemoryCache() {
-        super();
+    	super();
     }
 
     /*

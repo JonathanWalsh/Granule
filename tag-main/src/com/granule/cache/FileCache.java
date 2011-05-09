@@ -42,16 +42,17 @@ import com.granule.utils.PathUtils;
  * User: Dario Wunsch Date: 12.09.2010 Time: 4:05:16
  */
 public class FileCache extends TagCacheImpl {
-	protected static TagCacheImpl instance = new FileCache();
-
-	private String cacheFolder;
 
 	/*
 	 * Default pathname (it is abstract name reference to context path of web
 	 * app) Started from . to mark path as not absolute in the Unix File Systems
 	 */
 	private static final String DEFAULT_CACHE_FOLDER = "./granulecache";
+	private static final String CATALOG_JSON = "catalog.json";
 
+	protected static TagCacheImpl instance = new FileCache();
+
+	private String cacheFolder;
 	private BufferedOutputStream catalog;
 
 	private FileCache() {
@@ -117,8 +118,8 @@ public class FileCache extends TagCacheImpl {
 			} finally {
 				bos.close();
 			}
-			File f = new File(cacheFolder + filename);
-			f.setLastModified(System.currentTimeMillis());// cs.getModifyDate());
+			//File f = new File(cacheFolder + filename);
+			//f.setLastModified(System.currentTimeMillis());// cs.getModifyDate());
 
 			String json = cs.getJSONString(id);
 			catalog.write(json.getBytes("UTF-8"));
@@ -173,11 +174,8 @@ public class FileCache extends TagCacheImpl {
 						settings.setOptions(cs.getOptions());
 					String signature = generateSignature(settings, cs
 							.getFragments(), cs.getOptions(), cs.isScript());
-					// String targetId = generateId(signature);
-					// if (targetId.equalsIgnoreCase(id)) {
 					signatureToId.put(signature, id);
 					bundles.put(id, cs);
-					// }
 				} catch (Exception e) {
 					needRebuildCache = true;
 					logger.error("Could not load bundle from catalog:", e);
@@ -258,9 +256,7 @@ public class FileCache extends TagCacheImpl {
 
 	public void initForStandalone(String rootPath, CompressorSettings settings) {
 		cacheFolder = calculateCacheLocation(settings, rootPath);
-
 		emptyCacheFolder();
-
 		String catalogFilename = getCacheCatalogFilePath();
 		openCatalogFile(catalogFilename);
 	}
@@ -326,7 +322,7 @@ public class FileCache extends TagCacheImpl {
 	}
 
 	private String getCacheCatalogFilePath() {
-		return cacheFolder + "/catalog.json";
+		return cacheFolder + "/"+CATALOG_JSON;
 	}
 
 	private static final Logger logger = LoggerFactory

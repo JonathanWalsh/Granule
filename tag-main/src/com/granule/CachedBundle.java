@@ -50,7 +50,7 @@ public class CachedBundle {
     private static final String JAVASCRIPT_MIME = "application/x-javascript";
     private static final String CSS_MIME = "text/css";
 
-    private static final long ZIP_ERROR_COMPENSATION = 1350;
+    private static final long ZIP_ERROR_COMPENSATION = 10000;//10 seconds 
 
     public byte[] getBundleValue() {
         return bundleValue;
@@ -64,11 +64,11 @@ public class CachedBundle {
         return fragments;
     }
 
-    public void calcModifyDate(IRequestProxy request) {
-        modifyDate = calcModifyDate(fragments, dependentFragments, request);
+    public long calcModifyDate(IRequestProxy request) {
+        return calcModifyDate(fragments, dependentFragments, request);
     }
 
-    public static long calcModifyDate(List<FragmentDescriptor> fragments, List<FragmentDescriptor> deps,
+    protected static long calcModifyDate(List<FragmentDescriptor> fragments, List<FragmentDescriptor> deps,
                                       IRequestProxy request) {
         long d = 0;
         if (fragments != null)
@@ -120,7 +120,7 @@ public class CachedBundle {
             throw new JSCompileException(e);
         }
 
-        calcModifyDate(request);
+        this.modifyDate=calcModifyDate(request);
     }
 
     public void compile(CompressorSettings settings, IRequestProxy request) throws JSCompileException {
@@ -145,7 +145,7 @@ public class CachedBundle {
             throw new JSCompileException(e);
         }
 
-        calcModifyDate(request);
+        this.modifyDate=calcModifyDate(request);
     }
 
     private static byte[] gzip(String text) throws IOException {
@@ -246,7 +246,7 @@ public class CachedBundle {
 
         String filename = cacheFolder + "/" + obj.getString("id") + ".gzip." + (isScript() ? "js" : "css");
         File file = new File(filename);
-        modifyDate = file.lastModified();
+        this.modifyDate = file.lastModified();
         InputStream is = new FileInputStream(file);
         try {
             long length = file.length();
