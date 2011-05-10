@@ -10,7 +10,8 @@
 </head>
 
 <body>
- <div id="hello"></div>
+<div id="closure"></div>
+<div id="hello"></div>
  <g:compress>
     <script src="../js/closure/goog/base.js"></script>
     <script src="../js/hello.js"></script>

@@ -5,3 +5,8 @@
     font-weight: 500;
     padding-top: 8pt;
 }
+#closure {
+    width: 128px;
+    height: 128px;
+    background-image: url("//code.google.com/closure/images/logo128px.png");
+}
