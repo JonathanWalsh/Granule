@@ -128,7 +128,7 @@ public class PathUtils {
 	}
 	
     public static boolean isWebAddress(String path) {
-        return path.startsWith("http://") || path.startsWith("https://");
+        return path.startsWith("http://") || path.startsWith("https://") || path.startsWith("//");
     }
 
     public static boolean isValidJs(String path) {
