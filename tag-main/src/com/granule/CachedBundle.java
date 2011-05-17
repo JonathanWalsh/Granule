@@ -50,8 +50,8 @@ public class CachedBundle {
     private static final String JAVASCRIPT_MIME = "application/x-javascript";
     private static final String CSS_MIME = "text/css";
 
-    private static final long ZIP_ERROR_COMPENSATION = 10000;//10 seconds 
-
+    private static final long ZIP_ERROR_COMPENSATION = 10*1000;//10 seconds 
+   
     public byte[] getBundleValue() {
         return bundleValue;
     }
@@ -274,5 +274,9 @@ public class CachedBundle {
         return modifyDate;
     }
 
+    public void setModifyDate(long modifyDate) {
+        this.modifyDate=modifyDate;
+    }
+    
     private static final Logger logger = LoggerFactory.getLogger(CachedBundle.class);
 }

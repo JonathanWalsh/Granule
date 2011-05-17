@@ -110,18 +110,18 @@ public class FileCache extends TagCacheImpl {
 		try {
 			String filename = "/" + id + ".gzip."
 					+ (cs.isScript() ? "js" : "css");
-
+			File f = new File(cacheFolder + filename);
 			BufferedOutputStream bos = new BufferedOutputStream(
-					new FileOutputStream(cacheFolder + filename));
+					new FileOutputStream(f));
 			try {
 				bos.write(cs.getBundleValue());
 			} finally {
 				bos.close();
 			}
-			//File f = new File(cacheFolder + filename);
+			cs.setModifyDate(f.lastModified());
+			
 			//f.setLastModified(System.currentTimeMillis());// cs.getModifyDate());
-
-			String json = cs.getJSONString(id);
+            String json = cs.getJSONString(id);
 			catalog.write(json.getBytes("UTF-8"));
 			catalog.flush();
 		} catch (Exception e) {
