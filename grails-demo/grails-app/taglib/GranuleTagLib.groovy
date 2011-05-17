@@ -7,6 +7,7 @@ class GranuleTagLib {
      String options = attrs['options']
      String basepath = attrs['basepath']
      String id = attrs['id']
-     out << (new CompressTagHandler(id, method, options, basepath)).handleTag(new RealRequestProxy(request), body()).toString()
+     RealRequestProxy request = new RealRequestProxy(request)
+     out << (new CompressTagHandler(id, method, options, basepath)).handleTag(request, request, body()).toString()
   }
 }
