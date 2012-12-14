@@ -30,6 +30,7 @@ List of features
   *  Several types of cache, memory and file.
   *  Automatically regenerates the bundle if you modify an included file.
   *  Proxy-friendly GZip support.
+  *  Optional disable GZip support.
   *  Rewrites relative URLs in your CSS files.
   *  JSP, JSF, Grails integration.
   *  Multiple loggers support (SLF4J, Log4J, Apache Logger)
