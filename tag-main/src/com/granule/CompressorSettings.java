@@ -50,6 +50,7 @@ public class CompressorSettings {
     private String tagName = DEFAULT_TAG_NAME;
     private String contextRoot = null;
 	private String basePath = null;
+	private boolean enableGZip = true;
 
     public static final String NONE_VALUE = "none";
     public static final String CLOSURE_COMPILER_VALUE = "closure-compiler";
@@ -88,6 +89,7 @@ public class CompressorSettings {
     public static final String DEFAULT_TAG_NAME = "g:compress";
     public static final String CONTEXTROOT_KEY = "contextroot";
     public static final String BASEPATH_KEY = "basepath";
+    public static final String ENABLE_GZIP = "enable-gzip";
 
     public String getJsCompressMethod() {
         return jsCompressMethod;
@@ -229,6 +231,9 @@ public class CompressorSettings {
         
         if (props.containsKey(CONTEXTROOT_KEY))
         	contextRoot = props.getProperty(CONTEXTROOT_KEY);
+        
+        if (props.containsKey(ENABLE_GZIP))
+        	enableGZip = getBoolean(props.getProperty(ENABLE_GZIP), enableGZip);
     }
 
     private void readFileListProperty(Utf8Properties props, String settingName, List<String> list) throws IOException {
@@ -312,6 +317,10 @@ public class CompressorSettings {
 
 	public String getBasePath() {
 		return basePath;
+	}
+	
+	public boolean getEnableGZip() {
+		return enableGZip;
 	}
 
     
