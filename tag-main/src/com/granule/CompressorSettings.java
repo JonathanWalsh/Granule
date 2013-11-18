@@ -246,7 +246,7 @@ public class CompressorSettings {
         if (props.containsKey(CONTEXTROOT_KEY))
         	contextRoot = props.getProperty(CONTEXTROOT_KEY);
         
-        if(props.contains(GZIP_OUTPUT_KEY)){
+        if(props.containsKey(GZIP_OUTPUT_KEY)){
             gzipOutput = getBoolean(props.getProperty(GZIP_OUTPUT_KEY), gzipOutput);
         }
     }
