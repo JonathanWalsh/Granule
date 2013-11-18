@@ -115,11 +115,7 @@ public class CachedBundle {
             if (dep instanceof ExternalFragment && !hash.contains("/" + ((ExternalFragment) dep).getFilePath()))
                 dependentFragments.add(dep);
         try {
-            if(settings.isGzipOutput()){
-                bundleValue = gzip(text);
-            } else {
-                bundleValue = text.getBytes();
-            }
+            bundleValue = gzip(text);
         } catch (IOException e) {
             throw new JSCompileException(e);
         }
@@ -144,11 +140,7 @@ public class CachedBundle {
             text = Compressor.unifyCss(fragments, dependentFragments, settings, request);
 
         try {
-            if(settings.isGzipOutput()){
-                bundleValue = gzip(text);
-            } else {
-                bundleValue = text.getBytes();
-            }
+            bundleValue = gzip(text);
         } catch (IOException e) {
             throw new JSCompileException(e);
         }
