@@ -6,3 +6,4 @@ build
 MyEclipse
 classes
 *.developer.properties
+/tag-main/target/
