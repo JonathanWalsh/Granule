@@ -53,7 +53,7 @@ public class CompressorHandler {
             
             OutputStream os = response.getOutputStream();
             try {
-                if (gzipSupported(request)) {
+                if (settings.isGzipOutput() && gzipSupported(request)) {
                     response.setHeader("Content-Encoding", "gzip");
                     os.write(bundle.getBundleValue());
                 } else

@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 public final class CSSHandler {
     private static final String stringLiteralRegex = "(\"(?:\\.|[^\\\"])*\"|'(?:\\.|[^\\'])*')";
     private static final String urlRegex = String.format(
-            "(?:url\\(\\s*(%s|[^)]*)\\s*\\))", stringLiteralRegex);
+            "(?:url\\(\\s*(?!\\s*\\'\\/)(?!\\s*\\\"\\/)(?!\\s*\\/)(%s|[^)]*)\\s*\\))", stringLiteralRegex);
     private static final String importRegex = String.format(
             "(?:@import\\s+(%s|%s))", urlRegex, stringLiteralRegex);
 
