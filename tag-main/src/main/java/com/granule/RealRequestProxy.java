@@ -20,7 +20,9 @@ import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -42,15 +44,22 @@ public class RealRequestProxy implements IRequestProxy {
         if (path != null && !path.startsWith("/")) {
             path = "/" + path;
         }
-        File f = null;
-        try {
-            f = new File(request.getServletContext().getResource(path).toURI());
-        } catch (MalformedURLException ex) {
-            logger.error("The URL for the path is malformed.", ex);
-        } catch (URISyntaxException ex) {
-            logger.error("The URI has a syntax issue.", ex);
+
+        String realPath = request.getServletContext().getRealPath(path);
+
+        if (realPath == null) {
+            try {
+                URI uri = request.getServletContext().getResource(path).toURI();
+                if (uri != null && uri.getScheme().startsWith("file")) {
+                    realPath = new File(uri).getAbsolutePath();
+                }
+            } catch (MalformedURLException ex) {
+                logger.error("The URL for the path is malformed.", ex);
+            } catch (URISyntaxException ex) {
+                logger.error("The URI has a syntax issue.", ex);
+            }
         }
-        return f != null ? f.getAbsolutePath() : null;
+        return realPath;
     }
 
     @Override
