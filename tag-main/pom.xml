@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.granule</groupId>
     <artifactId>granule</artifactId>
-    <version>1.0.11-SNAPSHOT</version>
+    <version>1.0.11</version>
     <packaging>jar</packaging>
     <name>granule</name>
     <url>https://code.google.com/p/granule/</url>
