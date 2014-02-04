@@ -153,7 +153,7 @@ public class CompressTagHandler {
 	                            correction -= e.getEnd() - e.getBegin();
 	                        } else {
 	                            if (fragmentDescriptors.size() > 0) {
-	                                String newText = "<script src=\"" + PathUtils.getContextURL(runtimRequest.getContextPath(),"/combined.js?id="
+	                                String newText = "<script type=\"text/javascript\" src=\"" + PathUtils.getContextURL(runtimRequest.getContextPath(),"/combined.js?id="
 	                                        + bundleId) + "\"></script>";
 	                                newBody = newBody.substring(0, e.getBegin() + correction) + newText
 	                                        + newBody.substring(e.getEnd() + correction);
