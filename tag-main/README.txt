@@ -20,4 +20,4 @@
 
 Useful Tags libs for compressing JavaScript and CSS for JSP, Groovy, JSF.
 
-Requires Java5 or higher.
+Requires Java 5 or higher.
