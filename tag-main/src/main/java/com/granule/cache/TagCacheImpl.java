@@ -38,13 +38,7 @@ public abstract class TagCacheImpl implements TagCache {
 
 	protected String generateId(String hash) {
 		String pureId=hash;
-		int collision=0;
-		String id=pureId;
-		// handle hash collision
-		while (bundles.containsKey(id)) {
-			id=pureId+'_'+Integer.toHexString(collision++);
-		}
-		return id;
+		return pureId;
 	}
 	
 	protected String generateSignature(CompressorSettings settings, List<FragmentDescriptor> fragmentDescriptors,
