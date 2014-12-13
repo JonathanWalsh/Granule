@@ -19,28 +19,16 @@
 
 package com.granule.json;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.Reader;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.io.BufferedWriter;
-import java.io.CharArrayWriter;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.granule.json.internal.BeanSerializer;
 import com.granule.json.internal.Parser;
 import com.granule.json.internal.Serializer;
 import com.granule.json.internal.SerializerVerbose;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Extension of ArrayList that only allows values which are JSON-able.  
@@ -119,7 +107,7 @@ public class JSONArray extends ArrayList implements JSONArtifact {
      * @param col The Collection of objects to add into this array.
      * @param includeSuperclass For JavaBeans, include all superclass info.
      * @throws JSONException Thrown when objects in the collection are not JSONable.
-     * &throws NullPointerException Thrown if col is null.
+     * @throws NullPointerException Thrown if col is null.
      */
     public JSONArray(Collection col, boolean includeSuperclass) throws JSONException {
         super(col.size());
@@ -1106,7 +1094,7 @@ public class JSONArray extends ArrayList implements JSONArtifact {
 
     /**
      * Over-ridden toString() method.  Returns the same value as write(), which is a compact JSON String.
-     * If an error occurs in the serialization, the return will be of format: JSON Generation Error: [<some error>]
+     * If an error occurs in the serialization, the return will be of format: JSON Generation Error
      */
     public String toString() {
         String str = null;
@@ -1120,7 +1108,7 @@ public class JSONArray extends ArrayList implements JSONArtifact {
 
     /**
      * Function to return a string of JSON text with specified indention.  Returns the same value as write(indentDepth).
-     * If an error occurs in the serialization, the return will be of format: JSON Generation Error: [<some error>]
+     * If an error occurs in the serialization, the return will be of format: JSON Generation Error: 
      * @throws JSONException Thrown if an error occurs during JSON generation.
      */
     public String toString(int indentDepth) throws JSONException {
