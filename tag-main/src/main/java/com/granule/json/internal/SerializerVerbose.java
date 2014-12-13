@@ -21,9 +21,9 @@ package com.granule.json.internal;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Internaql class for handling the serialization of JSON objects in a verbose
@@ -50,7 +50,7 @@ public class SerializerVerbose extends Serializer {
 
     /**
      * Constructor.
-     * @param Writer The writer to serialize JSON to.
+     * @param writer The writer to serialize JSON to.
      * @param indentSpaces: How many spaces to indent by (0 to 8).  
      * The default indent is the TAB character. 
      */
@@ -90,7 +90,6 @@ public class SerializerVerbose extends Serializer {
 
     /**
      * Method to increase the indent depth of the output writer.
-     * @throws IOException Thrown if an error occurs during write.
      */
     public void indentPush() {
         indent++;
