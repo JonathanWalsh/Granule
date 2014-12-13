@@ -19,30 +19,10 @@
 
 package com.granule.json;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.InputStreamReader;
-import java.io.InputStream;
-import java.io.Writer;
-import java.io.OutputStreamWriter;
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.io.CharArrayWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.Vector;
-import java.util.Map;
-import java.util.Collection;
+import com.granule.json.internal.*;
 
-import com.granule.json.internal.BeanSerializer;
-import com.granule.json.internal.Null;
-import com.granule.json.internal.Parser;
-import com.granule.json.internal.Serializer;
-import com.granule.json.internal.SerializerVerbose;
+import java.io.*;
+import java.util.*;
 
 /**
  * Models a JSON Object.
@@ -563,7 +543,7 @@ public class JSONObject extends HashMap  implements JSONArtifact {
      * @param key The key to put in the JSONObject
      * @param value The value to put in the JSONObject
      * @param includeSuperclass Boolean indicating that if the object is a JavaBean, include superclass getter properties.
-     * @throws JSONException.  Thrown if key is null, not a string, or the value could not be converted.
+     * @throws JSONException  Thrown if key is null, not a string, or the value could not be converted.
      */
     public Object put(Object key, Object value, boolean includeSuperclass) throws JSONException{
         if (null == key) throw new JSONException("key must not be null");
@@ -604,7 +584,7 @@ public class JSONObject extends HashMap  implements JSONArtifact {
      * Similar to default HashMap put, except it returns JSONObject instead of Object.
      * @see java.util.HashMap#put(java.lang.Object, java.lang.Object)
      * @return A reference to this object instance.
-     * @throws JSONException.  Thrown if key is null, not a string, or the value could not be converted to JSON.
+     * @throws JSONException  Thrown if key is null, not a string, or the value could not be converted to JSON.
      */
     public JSONObject put(String key, Object value) throws JSONException{
         this.put((Object)key, value);
@@ -615,7 +595,7 @@ public class JSONObject extends HashMap  implements JSONArtifact {
      * Method to add an atomic boolean to the JSONObject.
      * param key The key/attribute name to set the boolean at.
      * @param value The boolean value.
-     * @throws JSONException.  Thrown if key is null or not a string.
+     * @throws JSONException  Thrown if key is null or not a string.
      * @return A reference to this object instance.
      */
     public JSONObject put(String key, boolean value) throws JSONException{
@@ -627,7 +607,7 @@ public class JSONObject extends HashMap  implements JSONArtifact {
      * Method to add an atomic double to the JSONObject.
      * param key The key/attribute name to set the double at.
      * @param value The double value.
-     * @throws JSONException.  Thrown if key is null or not a string.
+     * @throws JSONException  Thrown if key is null or not a string.
      * @return A reference to this object instance.
      */
     public JSONObject put(String key, double value) throws JSONException{
@@ -639,7 +619,7 @@ public class JSONObject extends HashMap  implements JSONArtifact {
      * Method to add an atomic integer to the JSONObject.
      * param key The key/attribute name to set the integer at.
      * @param value The integer value.
-     * @throws JSONException.  Thrown if key is null or not a string.
+     * @throws JSONException  Thrown if key is null or not a string.
      * @return A reference to this object instance.
      */
     public JSONObject put(String key, int value) throws JSONException{
@@ -651,7 +631,7 @@ public class JSONObject extends HashMap  implements JSONArtifact {
      * Method to add an atomic short to the JSONObject.
      * param key The key/attribute name to set the integer at.
      * @param value The integer value.
-     * @throws JSONException.  Thrown if key is null or not a string.
+     * @throws JSONException  Thrown if key is null or not a string.
      * @return A reference to this object instance.
      */
     public JSONObject put(String key, short value) throws JSONException{
@@ -663,7 +643,7 @@ public class JSONObject extends HashMap  implements JSONArtifact {
      * Method to add an atomic long to the JSONObject.
      * @param key The key/attribute name to set the long to.
      * @param value The long value.
-     * @throws JSONException.  Thrown if key is null or not a string.
+     * @throws JSONException  Thrown if key is null or not a string.
      * @return A reference to this object instance.
      */
     public JSONObject put(String key, long value) throws JSONException{
