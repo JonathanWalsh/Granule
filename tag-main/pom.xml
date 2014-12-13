@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.granule</groupId>
+    <groupId>guiche.granule</groupId>
     <artifactId>granule</artifactId>
     <version>1.0.13</version>
     <packaging>jar</packaging>
@@ -43,8 +43,8 @@
     </developers>
     <scm>
         <url>https://github.com/jyeary/Granule</url>
-        <connection>scm:git:git://github.com/jyeary/Granule.git</connection>
-        <developerConnection>scm:git:git@github.com:jyeary/Granule.git</developerConnection>
+        <connection>scm:git:git://github.com/digaobarbosa/Granule.git</connection>
+        <developerConnection>scm:git:git@github.com:digaobarbosa/Granule.git</developerConnection>
     </scm>
     <build>
         <plugins>
