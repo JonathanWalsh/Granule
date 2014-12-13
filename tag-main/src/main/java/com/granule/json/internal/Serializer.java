@@ -19,17 +19,17 @@
 
 package com.granule.json.internal;
 
+import com.granule.json.JSONArray;
+import com.granule.json.JSONObject;
+import com.granule.json.JSONString;
+import com.granule.json.OrderedJSONObject;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import com.granule.json.JSONArray;
-import com.granule.json.JSONObject;
-import com.granule.json.OrderedJSONObject;
-import com.granule.json.JSONString;
 
 /**
  * Class to handle serialization of a JSON object to a JSON string.
@@ -306,7 +306,6 @@ public class Serializer {
 
     /**
      * Method to increase the indent depth of the output writer.
-     * @throws IOException Thrown if an error occurs during write.
      */
     public void indentPush() {
     }

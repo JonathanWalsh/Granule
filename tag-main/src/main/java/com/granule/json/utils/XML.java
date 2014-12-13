@@ -387,7 +387,7 @@ public class XML {
 
     /**
      * Method to take an input stream to an JSON document and return a String of the XML format.  Note that the JSONStream is not closed when read is complete.  This is left up to the caller, who may wish to do more with it.
-     * @param xmlStream The InputStream to an JSON document to transform to XML.
+     * @param JSONStream The InputStream to an JSON document to transform to XML.
      * @param verbose Boolean flag denoting whther or not to write the XML in verbose (formatted), or compact form (no whitespace)
      * @return A string of the JSON representation of the XML file
      * 
@@ -424,7 +424,7 @@ public class XML {
     /**
      * Method to take a JSON file and return a String of the XML format.  
      * 
-     * @param xmlFile The JSON file to transform to XML.
+     * @param jsonFile The JSON file to transform to XML.
      * @param verbose Boolean flag denoting whther or not to write the XML in verbose (formatted), or compact form (no whitespace)
      * @return A string of the XML representation of the JSON file
      * 
