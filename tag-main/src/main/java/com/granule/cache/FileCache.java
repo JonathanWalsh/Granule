@@ -15,28 +15,17 @@
  */
 package com.granule.cache;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.List;
-
-import javax.servlet.ServletContext;
-
-import com.granule.CachedBundle;
-import com.granule.CompressorSettings;
-import com.granule.FragmentDescriptor;
-import com.granule.IRequestProxy;
-import com.granule.JSCompileException;
+import com.granule.*;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
 import com.granule.utils.PathUtils;
+
+import javax.servlet.ServletContext;
+import java.io.*;
+import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * User: Dario Wunsch Date: 12.09.2010 Time: 4:05:16
@@ -96,7 +85,7 @@ public class FileCache extends TagCacheImpl {
 			else
 				cs.compileCss(settings, request);
 			synchronized (this) {
-				id = generateId(signature);
+				id = generateId(cs.getHash());
 				signatureToId.put(signature, id);
 				bundles.put(id, cs);
 

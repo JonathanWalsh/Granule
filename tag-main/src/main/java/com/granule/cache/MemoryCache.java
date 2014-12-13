@@ -15,11 +15,7 @@
  */
 package com.granule.cache;
 
-import com.granule.CachedBundle;
-import com.granule.CompressorSettings;
-import com.granule.FragmentDescriptor;
-import com.granule.IRequestProxy;
-import com.granule.JSCompileException;
+import com.granule.*;
 import com.granule.json.JSONException;
 import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
@@ -70,7 +66,7 @@ public class MemoryCache extends TagCacheImpl {
             else
                 cs.compileCss(settings, request);
             synchronized (this) {
-                id = generateId(signature);
+                id = generateId(cs.getHash());
                 signatureToId.put(signature, id);
                 bundles.put(id, cs);
                 try {

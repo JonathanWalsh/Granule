@@ -21,14 +21,9 @@ import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
+import org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +44,7 @@ public class CachedBundle {
     private String options = null;
     private static final String JAVASCRIPT_MIME = "application/x-javascript";
     private static final String CSS_MIME = "text/css";
+    private String hash;
 
     private static final long ZIP_ERROR_COMPENSATION = 10*1000;//10 seconds 
    
@@ -116,6 +112,7 @@ public class CachedBundle {
                 dependentFragments.add(dep);
         try {
             bundleValue = gzip(text);
+            this.hash = DigestUtils.md5Hex(bundleValue);
         } catch (IOException e) {
             throw new JSCompileException(e);
         }
@@ -141,10 +138,10 @@ public class CachedBundle {
 
         try {
             bundleValue = gzip(text);
+            hash = DigestUtils.md5Hex(bundleValue);
         } catch (IOException e) {
             throw new JSCompileException(e);
         }
-
         this.modifyDate=calcModifyDate(request);
     }
 
@@ -272,6 +269,9 @@ public class CachedBundle {
 
     public long getModifyDate() {
         return modifyDate;
+    }
+    public String getHash(){
+        return hash;
     }
 
     public void setModifyDate(long modifyDate) {

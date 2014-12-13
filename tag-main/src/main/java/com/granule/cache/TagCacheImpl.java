@@ -15,20 +15,18 @@
  */
 package com.granule.cache;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.granule.CachedBundle;
 import com.granule.CompressorSettings;
 import com.granule.FragmentDescriptor;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * User: Dario Wunsch Date: 23.07.2010 Time: 3:31:12
  */
 public abstract class TagCacheImpl implements TagCache {
 
-	protected long initTime = System.currentTimeMillis();
-	
 	// Map script signature to script id
     protected HashMap<String, String> signatureToId = new HashMap<String, String>();
 
@@ -38,9 +36,8 @@ public abstract class TagCacheImpl implements TagCache {
 	protected TagCacheImpl() {
 	}
 
-	protected String generateId(String signature) {
-		int signatureHash =  signature.hashCode();
-		String pureId=String.format("%04x",signatureHash)+Long.toHexString(initTime>>16);
+	protected String generateId(String hash) {
+		String pureId=hash;
 		int collision=0;
 		String id=pureId;
 		// handle hash collision
