@@ -21,43 +21,34 @@ package com.granule.json.utils;
 
 import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
+import com.granule.json.utils.internal.JSONSAXHandler;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.UnsupportedEncodingException;
-import java.io.IOException;
-import java.util.logging.*;
-
-/**
- * Used for conversion of JSON -> XML.
- */
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Document;
-import java.util.Properties;
+import java.io.*;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.Set;
-import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-
-import com.granule.json.utils.internal.JSONSAXHandler;
+/**
+ * Used for conversion of JSON -> XML.
+ */
 
 
 /**
@@ -65,50 +56,6 @@ import com.granule.json.utils.internal.JSONSAXHandler;
  * into a JSON stream or String and vice-versa.
  * 
  * For example, the XML document:<br>
- * <xmp>
- *   <getValuesReturn return="true">
- *     <attribute attrValue="value"/>
- *     <String>First item</String>
- *     <String>Second item</String>
- *     <String>Third item</String>
- *     <TextTag>Text!</TextTag>
- *     <EmptyTag/>
- *     <TagWithAttrs attr1="value1" attr2="value2" attr3="value3"/>
- *     <TagWithAttrsAndText attr1="value1" attr2="value2" attr3="value3">Text!</TagWithAttrsAndText>
- *   </getValuesReturn>
- * </xmp>
- * <br>
- * in JSON (in non-compact form) becomes<br>
- * <xmp>
- * {
- *    "getValuesReturn" : {
- *       "return" : "true",
- *       "TextTag" : "Text!",
- *       "String" : [
- *          "First item",
- *          "Second item",
- *          "Third item"
- *       ],
- *       "TagWithAttrsAndText" : {
- *          "content" : "Text!",
- *          "attr3" : "value3",
- *          "attr2" : "value2",
- *          "attr1" : "value1"
- *       }
- *       ,
- *       "EmptyTag" : true,
- *       "attribute" : {
- *          "attrValue" : "value"
- *       }
- *       ,
- *       "TagWithAttrs" : {
- *          "attr3" : "value3",
- *          "attr2" : "value2",
- *          "attr1" : "value1"
- *       }
- *    }
- * } 
- * </xmp>
  */
 public class XML {
     /**
