@@ -24,7 +24,6 @@ import java.io.Writer;
  * Four <i><a name="LoggingLevel">logging levels</a></i> are defined in this interface.
  * The logging level is specified only by the use of different method names, there is no class or type defining the levels.
  * This makes the code required to wrap other logging frameworks much simpler and more efficient.
- * <p/>
  * The four logging levels are:
  * <ul class="SmallVerticalMargin">
  * <li>{@link #error(String) ERROR}
@@ -32,7 +31,7 @@ import java.io.Writer;
  * <li>{@link #info(String) INFO}
  * <li>{@link #debug(String) DEBUG}
  * </ul>
- * <p/>
+ * <br>
  * IMPLEMENTATION NOTE: Ideally the <code>java.util.logging.Logger</code> class could have been used as a basis for logging, even if used to define a wrapper
  * around other logging frameworks.
  * This would have avoided the need to define yet another logging interface, but because <code>java.util.logging.Logger</code> is implemented very poorly,

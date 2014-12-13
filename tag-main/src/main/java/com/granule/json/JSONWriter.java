@@ -19,14 +19,10 @@
 
 package com.granule.json;
 
-import java.io.Writer;
-import java.io.BufferedWriter;
-import java.io.StringWriter;
-import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.util.Stack;
-
 import com.granule.json.internal.BeanSerializer;
+
+import java.io.*;
+import java.util.Stack;
 
 /**
  * This class implements a JSONWrier, a convenience function for writing out JSON
@@ -91,7 +87,7 @@ public class JSONWriter {
     /**
      * Open a new JSON Array in the output stream.
      * @throws IOException Thrown if an error occurs on the underlying writer.
-     * @throws IllegalstateException Thrown if the current writer position does not permit an array.
+     * @throws java.lang.IllegalStateException Thrown if the current writer position does not permit an array.
      * @return A reference to this writer.
      */
     public JSONWriter array() throws IOException, IllegalStateException {

@@ -1430,7 +1430,7 @@ public class JSONObject extends HashMap  implements JSONArtifact {
 
     /**
      * Over-ridden toString() method.  Returns the same value as write(), which is a compact JSON String.
-     * If an error occurs in the serialization, the return will be of format: JSON Generation Error: [<some error>]
+     * If an error occurs in the serialization, the return will be of format: JSON Generation Error: 
      * @return A string of JSON text, if possible.
      */
     public String toString() {
@@ -1439,7 +1439,7 @@ public class JSONObject extends HashMap  implements JSONArtifact {
 
     /**
      * Verbose capable toString method.
-     * If an error occurs in the serialization, the return will be of format: JSON Generation Error: [<some error>]
+     * If an error occurs in the serialization, the return will be of format: JSON Generation Error: 
      * @param verbose Whether or not to tab-indent the output.
      * @return A string of JSON text, if possible.
      */

@@ -18,16 +18,16 @@ package com.granule;
 
 import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Dario Wunsch
- * @author John Yeary <jyeary@bluelotussoftware.com>
+ * @author John Yeary (jyeary@bluelotussoftware.com)
  * @version 1.1
  */
 public class RealRequestProxy implements IRequestProxy {
